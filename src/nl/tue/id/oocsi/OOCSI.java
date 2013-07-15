@@ -53,7 +53,7 @@ public class OOCSI {
 	 * @param channelName
 	 * @return
 	 */
-	public OOCSIMessage messageTo(String channelName) {
+	public OOCSIMessage channel(String channelName) {
 		return new OOCSIMessage(oocsi, channelName);
 	}
 
@@ -65,6 +65,41 @@ public class OOCSI {
 	 */
 	public void sendRaw(String channel, String data) {
 		oocsi.send(channel, data);
+	}
+
+	/**
+	 * subscribe to a channel
+	 * 
+	 * @param channelName
+	 */
+	public void subscribe(String channelName) {
+
+		if (handlerEventRawMethod != null
+				|| handlerEventRawMethodSender != null) {
+			oocsi.subscribe(channelName, new Handler() {
+
+				@Override
+				public void receive(String channelName, String data,
+						String sender) {
+					makeEvent(channelName, data, sender);
+				}
+			});
+
+			log(System.out, " - subscribed to " + channelName + " (raw)");
+
+		} else {
+			oocsi.subscribe(channelName, new DataHandler() {
+
+				@Override
+				public void receive(String channelName,
+						Map<String, Object> data, String sender) {
+					makeEvent(channelName, data, sender);
+				}
+			});
+
+			log(System.out, " - subscribed to " + channelName + " (data)");
+
+		}
 	}
 
 	/**
@@ -157,7 +192,7 @@ public class OOCSI {
 					}
 				});
 
-				log(System.out, " - subscribed to " + this.name + " (raw)");
+				log(System.out, " - subscribed to " + name + " (raw)");
 
 			} else {
 				oocsi.subscribe(new DataHandler() {
@@ -169,7 +204,7 @@ public class OOCSI {
 					}
 				});
 
-				log(System.out, " - subscribed to " + this.name + " (data)");
+				log(System.out, " - subscribed to " + name + " (data)");
 
 			}
 		}
