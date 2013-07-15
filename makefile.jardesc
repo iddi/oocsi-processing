@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="MacRoman" standalone="no"?>
 <jardesc>
-    <jar path="oocsi-processing/library.jar"/>
+    <jar path="oocsi-processing/oocsi/library/oocsi.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/oocsi-processing/makefile.jardesc" exportErrors="false" exportWarnings="true" includeDirectoryEntries="true" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
