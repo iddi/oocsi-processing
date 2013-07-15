@@ -2,6 +2,12 @@ package nl.tue.id.oocsi;
 
 import java.util.Map;
 
+/**
+ * event class for receiving events from OOCSI
+ * 
+ * @author mfunk
+ * 
+ */
 public class OOCSIEvent {
 
 	public String channelName;

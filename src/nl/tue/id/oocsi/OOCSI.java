@@ -9,6 +9,12 @@ import nl.tue.id.oocsi.client.protocol.DataHandler;
 import nl.tue.id.oocsi.client.protocol.Handler;
 import processing.core.PApplet;
 
+/**
+ * central OOCSI connector for Processing
+ * 
+ * @author mfunk
+ * 
+ */
 public class OOCSI {
 
 	private PApplet parent;

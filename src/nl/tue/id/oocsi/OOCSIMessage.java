@@ -5,6 +5,12 @@ import java.util.Map;
 
 import nl.tue.id.oocsi.client.OOCSIClient;
 
+/**
+ * message class for sending events to OOCSI
+ * 
+ * @author mfunk
+ * 
+ */
 public class OOCSIMessage extends OOCSIEvent {
 
 	private OOCSIClient oocsi;
