@@ -1,6 +1,5 @@
 package nl.tue.id.oocsi;
 
-import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -19,7 +18,6 @@ public class OOCSI {
 	private Method handlerEventDataMethod;
 	private Method handlerEventDataMethodSender;
 
-	private String name;
 	private OOCSIClient oocsi;
 
 	/**
@@ -85,7 +83,7 @@ public class OOCSI {
 				}
 			});
 
-			log(System.out, " - subscribed to " + channelName + " (raw)");
+			log(" - subscribed to " + channelName + " (raw)");
 
 		} else {
 			oocsi.subscribe(channelName, new DataHandler() {
@@ -97,7 +95,7 @@ public class OOCSI {
 				}
 			});
 
-			log(System.out, " - subscribed to " + channelName + " (data)");
+			log(" - subscribed to " + channelName + " (data)");
 
 		}
 	}
@@ -109,7 +107,7 @@ public class OOCSI {
 	 */
 	private void instrumentPApplet(PApplet parent) {
 
-		log(System.out, "Starting OOCSI...");
+		log("Starting OOCSI...");
 
 		try {
 			handlerEventRawMethod = parent.getClass().getDeclaredMethod(
@@ -157,7 +155,7 @@ public class OOCSI {
 				&& handlerEventDataMethodSender == null
 				&& handlerEventRawMethod == null
 				&& handlerEventRawMethodSender == null) {
-			log(System.out, " - no handlers found");
+			log(" - no handlers found");
 		}
 	}
 
@@ -170,15 +168,14 @@ public class OOCSI {
 	 */
 	private void startOOCSIConnection(String name, String hostname, int port) {
 
-		this.name = name;
 		oocsi = new OOCSIClient(name);
 
-		log(System.out, " - connecting to " + hostname + ":" + port);
+		log(" - connecting to " + hostname + ":" + port);
 
 		oocsi.connect(hostname, port);
 		if (oocsi.isConnected()) {
 
-			log(System.out, " - connected successfully");
+			log(" - connected successfully");
 
 			// subscribe to self handler
 			if (handlerEventRawMethod != null
@@ -192,7 +189,7 @@ public class OOCSI {
 					}
 				});
 
-				log(System.out, " - subscribed to " + name + " (raw)");
+				log(" - subscribed to " + name + " (raw)");
 
 			} else {
 				oocsi.subscribe(new DataHandler() {
@@ -204,7 +201,7 @@ public class OOCSI {
 					}
 				});
 
-				log(System.out, " - subscribed to " + name + " (data)");
+				log(" - subscribed to " + name + " (data)");
 
 			}
 		}
@@ -307,10 +304,9 @@ public class OOCSI {
 	/**
 	 * log a message on console
 	 * 
-	 * @param printStream
-	 * @param x
+	 * @param logMessage
 	 */
-	private void log(PrintStream printStream, String x) {
-		printStream.println(x);
+	private void log(String logMessage) {
+		System.out.println(logMessage);
 	}
 }
