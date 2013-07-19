@@ -94,6 +94,54 @@ public class OOCSIEvent {
 	}
 
 	/**
+	 * get value for the given key as float
+	 * 
+	 * @param key
+	 * @param defaultValue
+	 * @return
+	 */
+	public float getFloat(String key, float defaultValue) {
+		Object result = this.data.get(key);
+		if (result != null) {
+			if (result instanceof Float) {
+				return ((Float) result).floatValue();
+			} else {
+				try {
+					return Float.parseFloat(result.toString());
+				} catch (NumberFormatException nfe) {
+					return defaultValue;
+				}
+			}
+		} else {
+			return defaultValue;
+		}
+	}
+
+	/**
+	 * get value for the given key as double
+	 * 
+	 * @param key
+	 * @param defaultValue
+	 * @return
+	 */
+	public double getDouble(String key, double defaultValue) {
+		Object result = this.data.get(key);
+		if (result != null) {
+			if (result instanceof Double) {
+				return ((Double) result).doubleValue();
+			} else {
+				try {
+					return Double.parseDouble(result.toString());
+				} catch (NumberFormatException nfe) {
+					return defaultValue;
+				}
+			}
+		} else {
+			return defaultValue;
+		}
+	}
+
+	/**
 	 * get the value for the given key as String
 	 * 
 	 * @param key
