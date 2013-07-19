@@ -22,6 +22,30 @@ public class OOCSIEvent {
 	}
 
 	/**
+	 * get value for the given key as boolean
+	 * 
+	 * @param key
+	 * @param defaultValue
+	 * @return
+	 */
+	public boolean getBoolean(String key, boolean defaultValue) {
+		Object result = this.data.get(key);
+		if (result != null) {
+			if (result instanceof Boolean) {
+				return ((Boolean) result).booleanValue();
+			} else {
+				try {
+					return Boolean.parseBoolean(result.toString());
+				} catch (NumberFormatException nfe) {
+					return defaultValue;
+				}
+			}
+		} else {
+			return defaultValue;
+		}
+	}
+
+	/**
 	 * get value for the given key as int
 	 * 
 	 * @param key
@@ -70,6 +94,28 @@ public class OOCSIEvent {
 	}
 
 	/**
+	 * get the value for the given key as String
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public String getString(String key) {
+		return this.data.get(key).toString();
+	}
+
+	/**
+	 * get the value for the given key as String
+	 * 
+	 * @param key
+	 * @param defaultValue
+	 * @return
+	 */
+	public String getString(String key, String defaultValue) {
+		Object result = this.data.get(key);
+		return result != null ? result.toString() : defaultValue;
+	}
+
+	/**
 	 * get the value for the given key as Object
 	 * 
 	 * @param key
@@ -78,4 +124,5 @@ public class OOCSIEvent {
 	public Object getObject(String key) {
 		return this.data.get(key);
 	}
+
 }
