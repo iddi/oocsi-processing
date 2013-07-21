@@ -52,7 +52,7 @@ public class OOCSI {
 	}
 
 	/**
-	 * send data
+	 * send data through a channel given by the channelName
 	 * 
 	 * @param channelName
 	 * @return
@@ -101,7 +101,7 @@ public class OOCSI {
 				}
 			});
 
-			log(" - subscribed to " + channelName + " (data)");
+			log(" - subscribed to " + channelName);
 
 		}
 	}
