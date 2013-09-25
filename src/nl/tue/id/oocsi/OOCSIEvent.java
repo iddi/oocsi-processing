@@ -10,10 +10,10 @@ import java.util.Map;
  */
 public class OOCSIEvent {
 
-	public String channelName;
-	public String sender;
+	protected String channelName;
+	protected String sender;
 
-	private Map<String, Object> data;
+	protected Map<String, Object> data;
 
 	OOCSIEvent(String channelName, Map<String, Object> data, String sender) {
 		this.channelName = channelName;
@@ -173,4 +173,30 @@ public class OOCSIEvent {
 		return this.data.get(key);
 	}
 
+	/**
+	 * get the name or handle of the sender who sent this event
+	 * 
+	 * @return
+	 */
+	public String getSender() {
+		return sender;
+	}
+
+	/**
+	 * get the name of the recipient (or channel) this event was sent to
+	 * 
+	 * @return
+	 */
+	public String getRecipient() {
+		return channelName;
+	}
+
+	/**
+	 * get the name of the channel (or recipient) this event was sent to
+	 * 
+	 * @return
+	 */
+	public String getChannel() {
+		return channelName;
+	}
 }

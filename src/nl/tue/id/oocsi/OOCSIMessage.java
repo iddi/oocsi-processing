@@ -1,7 +1,6 @@
 package nl.tue.id.oocsi;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import nl.tue.id.oocsi.client.OOCSIClient;
 
@@ -14,7 +13,6 @@ import nl.tue.id.oocsi.client.OOCSIClient;
 public class OOCSIMessage extends OOCSIEvent {
 
 	private OOCSIClient oocsi;
-	private Map<String, Object> data;
 	private boolean isSent = false;
 
 	/**
@@ -23,11 +21,9 @@ public class OOCSIMessage extends OOCSIEvent {
 	 * @param oocsi
 	 * @param channelName
 	 */
-	public OOCSIMessage(OOCSIClient oocsi, String channelName) {
-		super(channelName, null, "");
-
+	OOCSIMessage(OOCSIClient oocsi, String channelName) {
+		super(channelName, new HashMap<String, Object>(), "");
 		this.oocsi = oocsi;
-		this.data = new HashMap<String, Object>();
 	}
 
 	/**
