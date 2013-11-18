@@ -174,6 +174,16 @@ public class OOCSIEvent {
 	}
 
 	/**
+	 * check if the event contains data with the key
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public boolean has(String key) {
+		return this.data.containsKey(key);
+	}
+
+	/**
 	 * get the name or handle of the sender who sent this event
 	 * 
 	 * @return
