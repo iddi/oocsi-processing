@@ -4,3 +4,6 @@
 core.jar
 *.war
 *.ear
+
+# Plugin directories
+/lib
