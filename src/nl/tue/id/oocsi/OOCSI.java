@@ -107,6 +107,35 @@ public class OOCSI {
 	}
 
 	/**
+	 * retrieve the list of clients on the server
+	 * 
+	 * @return
+	 */
+	public String getClients() {
+		return oocsi.clients();
+	}
+
+	/**
+	 * retrieve the list of channels on the server
+	 * 
+	 * @return
+	 */
+	public String getChannels() {
+		return oocsi.channels();
+	}
+
+	/**
+	 * retrieve the list of sub-channel of the channel with the given name on
+	 * the server
+	 * 
+	 * @param channelName
+	 * @return
+	 */
+	public String getChannels(String channelName) {
+		return oocsi.channels(channelName);
+	}
+
+	/**
 	 * instrument the parent PApplet
 	 * 
 	 * @param parent
