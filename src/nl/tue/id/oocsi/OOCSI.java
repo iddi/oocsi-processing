@@ -239,6 +239,8 @@ public class OOCSI {
 				log(" - subscribed to " + name + " (data)");
 
 			}
+		} else {
+			// cannot connect with the given name
 		}
 	}
 
