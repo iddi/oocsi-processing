@@ -15,8 +15,8 @@ void setup() {
 }
 
 void draw() {
-	println("-----------------------------")
+	println("-----------------------------");
 
 	// retrieve and immediately print list of clients
-	println(oocsi.clients());
+	println(oocsi.getClients());
 }
