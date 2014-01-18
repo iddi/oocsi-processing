@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="MacRoman" standalone="no"?>
+<?xml version="1.0" encoding="GBK" standalone="no"?>
 <jardesc>
     <jar path="oocsi-processing/dist/oocsi/library/oocsi.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/oocsi-processing/build/makefile.jardesc" exportErrors="false" exportWarnings="true" includeDirectoryEntries="true" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
@@ -12,6 +12,7 @@
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
         <javaElement handleIdentifier="=oocsi-client/src"/>
+        <javaElement handleIdentifier="=oocsi-server/src"/>
         <javaElement handleIdentifier="=oocsi-processing/src"/>
     </selectedElements>
 </jardesc>

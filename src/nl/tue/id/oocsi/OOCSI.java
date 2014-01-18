@@ -2,11 +2,14 @@ package nl.tue.id.oocsi;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 
 import nl.tue.id.oocsi.client.OOCSIClient;
 import nl.tue.id.oocsi.client.protocol.DataHandler;
 import nl.tue.id.oocsi.client.protocol.Handler;
+import nl.tue.id.oocsi.server.discovery.OOCSIServiceExplorer;
 import processing.core.PApplet;
 
 /**
@@ -34,7 +37,18 @@ public class OOCSI {
 	 * @param hostname
 	 */
 	public OOCSI(PApplet parent, String name, String hostname) {
-		this(parent, name, hostname, 4444);
+		int port = 4444;
+		String host = hostname;
+		URI uri;
+		try {
+			uri = new URI("http://"+hostname);
+			if(uri.getPort() > 0) port = uri.getPort();
+			if(uri.getHost() != null)host = uri.getHost();
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		init(parent, name, host, port);
 	}
 
 	/**
@@ -46,9 +60,23 @@ public class OOCSI {
 	 * @param port
 	 */
 	public OOCSI(PApplet parent, String name, String hostname, int port) {
+		init(parent, name, hostname, port);
+	}
+	
+    private void init(PApplet parent, String name, String hostname, int port){
 		this.parent = parent;
 		instrumentPApplet(parent);
 		startOOCSIConnection(name, hostname, port);
+    }
+	
+	public static String[] list(){
+		OOCSIServiceExplorer explorer = new OOCSIServiceExplorer();
+		return explorer.list();
+	}
+	
+	public static String[] list(String serviceName){
+		OOCSIServiceExplorer explorer = new OOCSIServiceExplorer();
+		return explorer.list(serviceName);
 	}
 
 	/**
