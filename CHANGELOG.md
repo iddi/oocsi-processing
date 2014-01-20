@@ -1,4 +1,5 @@
 2014-01-20
+ * Implemented a unit test for service discovery;
  * added setPerformancePreferences and setReuseAddress in OOCSIServiceProvider, to match the configuration code in init() of SocketServer;
  * added configuration constants to ServiceConstants for setPerformancePreferences and setReuseAddress
 
