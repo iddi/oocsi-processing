@@ -1,3 +1,7 @@
+2014-01-20
+ * added setPerformancePreferences and setReuseAddress in OOCSIServiceProvider, to match the configuration code in init() of SocketServer;
+ * added configuration constants to ServiceConstants for setPerformancePreferences and setReuseAddress
+
 2014-01-19
 
  * Detailed inline documentation for ServiceConstants
