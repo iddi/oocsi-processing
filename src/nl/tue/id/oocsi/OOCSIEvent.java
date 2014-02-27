@@ -184,6 +184,15 @@ public class OOCSIEvent {
 	}
 
 	/**
+	 * retrieve all keys from the event
+	 * 
+	 * @return
+	 */
+	public String[] keys() {
+		return this.data.keySet().toArray(new String[] {});
+	}
+
+	/**
 	 * get the name or handle of the sender who sent this event
 	 * 
 	 * @return
