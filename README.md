@@ -14,7 +14,7 @@ Alternatively, you can browse the source code on GitHub or clone the GitHub repo
 
 ## Installation
 
-1. Extract the zip file into the Processing libraries directory
+1. Extract the zip file into the Processing libraries directory (in Windows processing-x.x.x\modes\java\libraries\)
 2. Restart Processing
 3. Open the examples browser in Processing, look for the Libraries >> oocsi folder 
 
