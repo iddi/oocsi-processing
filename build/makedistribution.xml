@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_distribution" name="Create Processing plugin distribution bundle">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="makeJar">
+        <jar destfile="../dist/oocsi/library/oocsi.jar">
+            <manifest>
+                <attribute name="Class-Path" value="."/>
+                <attribute name="Rsrc-Class-Path" value="./"/>
+            </manifest>
+            <fileset dir="../bin" includes="nl/">
+            	<exclude name="channel"/>
+            	<exclude name="direct"/>
+        		<exclude name="**/*Test**"/>
+        		<exclude name="***Test**"/>
+        	</fileset>
+            <fileset dir="../../oocsi/client/bin" includes="nl/">
+        		<exclude name="***Test***"/>
+        	</fileset>
+		</jar>
+    </target>
+    <target name="create_distribution" depends="makeJar">
+    	<zip destfile="../dist/oocsi-processing.zip" basedir="../dist/oocsi"/>
+    </target>
+</project>
