@@ -8,3 +8,4 @@ core.jar
 # Plugin directories
 /lib
 /bin
+/.externalToolBuilders
