@@ -68,6 +68,23 @@ In this example, all contents of a message are printed to the Processing console
 		println(message.get("intensity"));
 	}
 	
+Instead of using "handleOOCSIEvent" as the default hub of all incoming OOCSI events, 
+you can create a new function with the same name as the channel you would like to subscribe to, 
+and then this function will be called for incoming evens from that channel:
+
+	...
+	
+	oocsi.subscribe("testchannel");
+	
+	...
+
+	void testchannel(OOCSIEvent message) {
+		// print out the "intensity" value in the message from channel "testchannel"
+		println(message.get("intensity"));
+	}
+	
+Note that for this only channel names without punctuation and whitespace characters are possible.
+	
 
 ### Send data to OOCSI channel
 

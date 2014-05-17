@@ -1,7 +1,7 @@
 package direct;
 
 import nl.tue.id.oocsi.OOCSI;
-import nl.tue.id.oocsi.OOCSIEvent;
+import nl.tue.id.oocsi.client.protocol.OOCSIEvent;
 import processing.core.PApplet;
 
 @SuppressWarnings("serial")

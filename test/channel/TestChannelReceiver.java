@@ -1,12 +1,11 @@
 package channel;
 
 import nl.tue.id.oocsi.OOCSI;
-import nl.tue.id.oocsi.OOCSIEvent;
+import nl.tue.id.oocsi.client.protocol.OOCSIEvent;
 import processing.core.PApplet;
 
 /**
- * example application - receives color and position values from OOCSI, on the
- * channel "testchannel"
+ * example application - receives color and position values from OOCSI, on the channel "testchannel"
  * 
  * @author mfunk
  * 
@@ -21,8 +20,7 @@ public class TestChannelReceiver extends PApplet {
 		size(200, 200);
 
 		// open connection to local OOCSI
-		OOCSI oocsi = new OOCSI(this, ("receiver_" + Math.random()).toString()
-				.substring(0, 12), "localhost");
+		OOCSI oocsi = new OOCSI(this, ("receiver_" + Math.random()).toString().substring(0, 12), "localhost");
 
 		// subscribe to channel "testchannel"
 		oocsi.subscribe("testchannel");
