@@ -20,6 +20,6 @@
 		</jar>
     </target>
     <target name="create_distribution" depends="makeJar">
-    	<zip destfile="../dist/oocsi-processing.zip" basedir="../dist/oocsi"/>
+    	<zip destfile="../dist/oocsi.zip" basedir="../dist/oocsi"/>
     </target>
 </project>
