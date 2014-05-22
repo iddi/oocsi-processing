@@ -1,6 +1,5 @@
 package nl.tue.id.oocsi;
 
-import nl.tue.id.oocsi.client.OOCSICommunicator;
 import nl.tue.id.oocsi.client.protocol.OOCSIMessage;
 import processing.core.PApplet;
 
