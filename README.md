@@ -101,6 +101,53 @@ Essentially, sending messages follows three steps:
 This composed message will then be send via the connected OOCSI server to the respective channel or client, in this case to "channel red". 
 
 
+### Getting data from events
+
+An OOCSIEvent has built-in infrastructure-level data fields such as _sender_, _timestamp_, and _channel_. In addition, the _recipient_ field is provided for some client implementations.
+Each of these fields can be access with a dedicated getter method:
+
+	OOCSI event = ...
+	
+	// sender and receiver
+	String sender = event.getSender();
+	String channel = event.getChannel();
+	String channel = event.getRecipient();
+	
+	// time
+	Date timestamp = event.getTimestamp();
+	long unixTime = event.getTime();
+	
+Apart from that, OOCSIEvents have a data payload that is freely definable and realized as a key-value store (Map<String, Object>). Such key-value pairs can be accessed with helper mthods
+that will convert the data type of hte value accordingly: 
+	 
+	OOCSI event = ...
+	String stringValue = event.getString("mykey");
+	Object objectValue = event.getObject("mykey");
+	
+Events do not guarantee that specific keys and values are contained. For these cases, default values can be used in the retrieval of event data. These default values (with the correct data type) are 
+added to the retrieval call as a second parameter, and they will be assigned if (1) the key could not be found, or (2) if the value could not converted to the specified data type.  	
+
+	// retrieval with an additional default value
+	OOCSI event = ...
+	String stringValue = event.getString("mykey", "default");
+	long longValue = event.getLong("mykey", 0);
+	int intValue = event.getInt("mykey", 0);
+	boolean booleanValue = event.getInt("mykey", false);
+
+As an alternative to using default values, one can also check whether the key is contained in the event:
+
+	OOCSI event = ...
+	if(event.has("mykey")) {
+		// retrieve value
+	}
+	
+Finally, events can provide a list of contained keys, which can be used to dump all contained data or to systematically retrieve all data.
+
+	OOCSI event = ...
+	String[] keys = event.keys();
+
+
+
 ### Full example
 
 As a full example, we build a simple counter that will count from 0 up till the sketch is stopped.
