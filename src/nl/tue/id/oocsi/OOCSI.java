@@ -148,7 +148,7 @@ public class OOCSI {
 	 * @return
 	 */
 	public String getClients() {
-		return oocsi.clients();
+		return oocsi.isConnected() ? oocsi.clients() : "";
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class OOCSI {
 	 * @return
 	 */
 	public String getChannels() {
-		return oocsi.channels();
+		return oocsi.isConnected() ? oocsi.channels() : "";
 	}
 
 	/**
@@ -167,7 +167,7 @@ public class OOCSI {
 	 * @return
 	 */
 	public String getChannels(String channelName) {
-		return oocsi.channels(channelName);
+		return oocsi.isConnected() ? oocsi.channels(channelName) : "";
 	}
 
 	/**
@@ -186,16 +186,16 @@ public class OOCSI {
 			}
 		};
 
-		log(" - connecting to " + hostname + ":" + port);
-
 		if (reconnect) {
 			log(" - reconnecting switched on");
 			oocsi.setReconnect(reconnect);
 		}
 
 		if (hostname != null) {
+			log(" - connecting to " + hostname + ":" + port);
 			oocsi.connect(hostname, port);
 		} else {
+			log(" - connecting with autoconf");
 			oocsi.connect();
 		}
 	}
