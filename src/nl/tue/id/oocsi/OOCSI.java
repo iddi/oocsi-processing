@@ -18,10 +18,20 @@ public class OOCSI {
 	 * 
 	 * @param parent
 	 * @param name
-	 * @param hostname
 	 */
 	public OOCSI(PApplet parent, String name) {
-		init(parent, name, null, -1);
+		init(parent, name, null, -1, false);
+	}
+
+	/**
+	 * create a new OOCSI network connection
+	 * 
+	 * @param parent
+	 * @param name
+	 * @param reconnect
+	 */
+	public OOCSI(PApplet parent, String name, boolean reconnect) {
+		init(parent, name, null, -1, reconnect);
 	}
 
 	/**
@@ -32,7 +42,19 @@ public class OOCSI {
 	 * @param hostname
 	 */
 	public OOCSI(PApplet parent, String name, String hostname) {
-		init(parent, name, hostname, 4444);
+		init(parent, name, hostname, 4444, false);
+	}
+
+	/**
+	 * create a new OOCSI network connection
+	 * 
+	 * @param parent
+	 * @param name
+	 * @param hostname
+	 * @param reconnect
+	 */
+	public OOCSI(PApplet parent, String name, String hostname, boolean reconnect) {
+		init(parent, name, hostname, 4444, reconnect);
 	}
 
 	/**
@@ -44,7 +66,19 @@ public class OOCSI {
 	 * @param port
 	 */
 	public OOCSI(PApplet parent, String name, String hostname, int port) {
-		init(parent, name, hostname, port);
+		init(parent, name, hostname, port, false);
+	}
+
+	/**
+	 * create a new OOCSI network connection
+	 * 
+	 * @param parent
+	 * @param name
+	 * @param hostname
+	 * @param port
+	 */
+	public OOCSI(PApplet parent, String name, String hostname, int port, boolean reconnect) {
+		init(parent, name, hostname, port, reconnect);
 	}
 
 	/**
@@ -55,8 +89,8 @@ public class OOCSI {
 	 * @param hostname
 	 * @param port
 	 */
-	private void init(PApplet parent, String name, String hostname, int port) {
-		startOOCSIConnection(parent, name, hostname, port);
+	private void init(PApplet parent, String name, String hostname, int port, boolean reconnect) {
+		startOOCSIConnection(parent, name, hostname, port, reconnect);
 	}
 
 	/**
@@ -143,7 +177,7 @@ public class OOCSI {
 	 * @param hostname
 	 * @param port
 	 */
-	private void startOOCSIConnection(Object parent, String name, String hostname, int port) {
+	private void startOOCSIConnection(Object parent, String name, String hostname, int port, boolean reconnect) {
 
 		// create OOCSI client instance, with logging rerouted to console
 		oocsi = new OOCSICommunicator(parent, name) {
@@ -153,6 +187,11 @@ public class OOCSI {
 		};
 
 		log(" - connecting to " + hostname + ":" + port);
+
+		if (reconnect) {
+			log(" - reconnecting switched on");
+			oocsi.setReconnect(reconnect);
+		}
 
 		if (hostname != null) {
 			oocsi.connect(hostname, port);
