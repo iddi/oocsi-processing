@@ -20,6 +20,17 @@ public class OOCSI {
 	 * @param name
 	 * @param hostname
 	 */
+	public OOCSI(PApplet parent, String name) {
+		init(parent, name, null, -1);
+	}
+
+	/**
+	 * create a new OOCSI network connection
+	 * 
+	 * @param parent
+	 * @param name
+	 * @param hostname
+	 */
 	public OOCSI(PApplet parent, String name, String hostname) {
 		init(parent, name, hostname, 4444);
 	}
@@ -143,7 +154,11 @@ public class OOCSI {
 
 		log(" - connecting to " + hostname + ":" + port);
 
-		oocsi.connect(hostname, port);
+		if (hostname != null) {
+			oocsi.connect(hostname, port);
+		} else {
+			oocsi.connect();
+		}
 	}
 
 	/**
