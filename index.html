@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Oocsi-processing by iddi</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Oocsi-processing</h1>
+        <h2>OOCSI library for Processing</h2>
+        <a href="https://github.com/iddi/oocsi-processing" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="oocsi-processing" class="anchor" href="#oocsi-processing" aria-hidden="true"><span class="octicon octicon-link"></span></a>oocsi-processing</h1>
+
+<p>Processing Library for the <a href="https://github.com/iddi/oocsi">OOCSI</a> platform.</p>
+
+<p>This platform can connect Windows, Mac and Linux computers (running Java and Processing), devices (Arduino, Raspberry Pi and Gadgeteer),
+Web brosers (via websockets) and mobile devices (iOS and Android).
+Please refer to the general documentation to know more about connection possibilities.  </p>
+
+<h2>
+<a id="download" class="anchor" href="#download" aria-hidden="true"><span class="octicon octicon-link"></span></a>Download</h2>
+
+<p>Find the latest version of the library here: <a href="dist/oocsi.zip">oocsi-processing.zip</a> (21kB)</p>
+
+<p>Alternatively, you can browse the source code on GitHub or clone the GitHub repository and get started with the code.</p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<ol>
+<li>Extract the zip file into the Processing libraries directory (in Windows processing-x.x.x\modes\java\libraries)</li>
+<li>Restart Processing</li>
+<li>Open the examples browser in Processing, look for the Libraries &gt;&gt; oocsi folder </li>
+</ol>
+
+<h2>
+<a id="how-to-use" class="anchor" href="#how-to-use" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to use</h2>
+
+<p>Either use one of the examples from the Processing examples browser, or follow the short tutorial below.</p>
+
+<p>Before starting with an OOCSI client running in Processing, you need to know how the OOCSI network looks like.
+You will need an OOCSI server running either on your computer (<em>localhost</em>) or available from the network.
+Also, any OOCSI client in the network is identified by a <em>unique name</em>, which serves also as an address if other clients in the OOCSI network want to messages. </p>
+
+<h3>
+<a id="create-an-oocsi-client" class="anchor" href="#create-an-oocsi-client" aria-hidden="true"><span class="octicon octicon-link"></span></a>Create an OOCSI client</h3>
+
+<p>Before you can send or receive messages, you will need to create an OOCSI client that connects to an OOCSI server (running at a specific address).
+When creating the client, you will need to supply also a <em>unique name</em>, which can be used as a handle if others want to send messages to your client. </p>
+
+<p>Create a client that connects to an OOCSI server running on the local computer (running at <em>localhost</em>, see <a href="https://https://github.com/iddi/oocsi/readme.md#running_local">here</a>):</p>
+
+<pre><code>OOCSI oocsi = new OOCSI(this, "unique name", "localhost");    
+</code></pre>
+
+<p>Create a client that connects to an OOCSI server running at the address <em>oocsi.example.net</em>:</p>
+
+<pre><code>OOCSI oocsi = new OOCSI(this, "unique name", "oocsi.example.net");
+</code></pre>
+
+<p>After this statement, the OOCSI client <em>oocsi</em> can be used in Processing code to send or subscribe for messages.
+Please keep an eye on the Processing console where OOCSI will print start messages and also error, in case something goes wrong. </p>
+
+<h3>
+<a id="subscribe-to-oocsi-channel" class="anchor" href="#subscribe-to-oocsi-channel" aria-hidden="true"><span class="octicon octicon-link"></span></a>Subscribe to OOCSI channel</h3>
+
+<p>OOCSI communications base on messages which are sent to channels or individual clients. For simplicity, clients are regarded as channels as well.
+OOCSI clients like the one created above can subscribe to channels, and from then on will receive all messages that are sent to the chosen channels.
+Also, clients will receive all messages that are sent to their specific channel.</p>
+
+<pre><code>oocsi.subscribe("channel red"); 
+</code></pre>
+
+<p>This line will subscribe the client to the channel <em>channel red</em>. The client will receive all messages sent to that channel.
+To actually receive something, the <em>handleOOCSIEvent</em> function has to be in place: </p>
+
+<pre><code>void handleOOCSIEvent(OOCSIEvent message) {
+    // print out all values in message
+    println(message.keys());
+}
+</code></pre>
+
+<p>In this example, all contents of a message are printed to the Processing console. These <em>keys</em> can be used to retrieve values from the message, for example:</p>
+
+<pre><code>void handleOOCSIEvent(OOCSIEvent message) {
+    // print out the "intensity" value in the message
+    println(message.get("intensity"));
+}
+</code></pre>
+
+<p>Instead of using "handleOOCSIEvent" as the default hub of all incoming OOCSI events, 
+you can create a new function with the same name as the channel you would like to subscribe to, 
+and then this function will be called for incoming evens from that channel:</p>
+
+<pre><code>...
+
+oocsi.subscribe("testchannel");
+
+...
+
+void testchannel(OOCSIEvent message) {
+    // print out the "intensity" value in the message from channel "testchannel"
+    println(message.get("intensity"));
+}
+</code></pre>
+
+<p>Note that for this only channel names without punctuation and whitespace characters are possible.</p>
+
+<h3>
+<a id="send-data-to-oocsi-channel" class="anchor" href="#send-data-to-oocsi-channel" aria-hidden="true"><span class="octicon octicon-link"></span></a>Send data to OOCSI channel</h3>
+
+<p>Sending data to the OOCSI network, for instance, to one specific channel or client is even easier: </p>
+
+<pre><code>oocsi.channel("channel red").data("intensity", 100).send();
+</code></pre>
+
+<p>Essentially, sending messages follows three steps: </p>
+
+<ol>
+<li>Select a channel, for example: "channel red"</li>
+<li>Add data to the message, for example: "intensity" = 100</li>
+<li>Send the message to OOCSI</li>
+</ol>
+
+<p>This composed message will then be send via the connected OOCSI server to the respective channel or client, in this case to "channel red". </p>
+
+<h3>
+<a id="getting-data-from-events" class="anchor" href="#getting-data-from-events" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting data from events</h3>
+
+<p>An OOCSIEvent has built-in infrastructure-level data fields such as <em>sender</em>, <em>timestamp</em>, and <em>channel</em>. In addition, the <em>recipient</em> field is provided for some client implementations.
+Each of these fields can be access with a dedicated getter method:</p>
+
+<pre><code>OOCSI event = ...
+
+// sender and receiver
+String sender = event.getSender();
+String channel = event.getChannel();
+String channel = event.getRecipient();
+
+// time
+Date timestamp = event.getTimestamp();
+long unixTime = event.getTime();
+</code></pre>
+
+<p>Apart from that, OOCSIEvents have a data payload that is freely definable and realized as a key-value store (Map). Such key-value pairs can be accessed with helper mthods
+that will convert the data type of hte value accordingly: </p>
+
+<pre><code>OOCSI event = ...
+String stringValue = event.getString("mykey");
+Object objectValue = event.getObject("mykey");
+</code></pre>
+
+<p>Events do not guarantee that specific keys and values are contained. For these cases, default values can be used in the retrieval of event data. These default values (with the correct data type) are 
+added to the retrieval call as a second parameter, and they will be assigned if (1) the key could not be found, or (2) if the value could not converted to the specified data type.     </p>
+
+<pre><code>// retrieval with an additional default value
+OOCSI event = ...
+String stringValue = event.getString("mykey", "default");
+long longValue = event.getLong("mykey", 0);
+int intValue = event.getInt("mykey", 0);
+boolean booleanValue = event.getInt("mykey", false);
+</code></pre>
+
+<p>As an alternative to using default values, one can also check whether the key is contained in the event:</p>
+
+<pre><code>OOCSI event = ...
+if(event.has("mykey")) {
+    // retrieve value
+}
+</code></pre>
+
+<p>Finally, events can provide a list of contained keys, which can be used to dump all contained data or to systematically retrieve all data.</p>
+
+<pre><code>OOCSI event = ...
+String[] keys = event.keys();
+</code></pre>
+
+<h3>
+<a id="full-example" class="anchor" href="#full-example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Full example</h3>
+
+<p>As a full example, we build a simple counter that will count from 0 up till the sketch is stopped.
+In the <em>setup</em> function, a connection to the OOCSI network is established with the handle "counterA", and after that,
+an initial message with counter = 0 is sent to "counterA" via the OOCSI network. In the <em>handleOOCSIEvent</em> function,
+every time a message with a counter value is received, the sketch will send it out to handle "counterA" again with the counter increased by 1.
+When pasting the following code into Processing and running it, the Processing console should show a fast sequence of increasing numbers.</p>
+
+<pre><code>import nl.tue.id.oocsi.*;
+
+OOCSI oocsi;
+
+void setup () { 
+  oocsi = new OOCSI(this, "counterA", "localhost");
+  oocsi.channel("counterA").data("count", 0).send();
+}
+
+void handleOOCSIEvent(OOCSIEvent e) {
+  int count = e.getInt("count", 0);
+  println(count);
+  oocsi.channel("counterA").data("count", count + 1).send();
+}
+</code></pre>
+
+<h3>
+<a id="other-examples" class="anchor" href="#other-examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Other examples</h3>
+
+<p>The OOCSI Processing plugin comes with 3 examples that demonstrate parts of the functionality.
+All examples require an OOCSI server running on the same computer (running at <em>localhost</em>, see <a href="https://https://github.com/iddi/oocsi/readme.md#running_local">here</a>).
+The examples are available from the Processing examples browser, or below:</p>
+
+<ol>
+<li>
+<p>Client to client message sending <em>via a direct link</em>:</p>
+
+<ul>
+<li>
+<a href="dist/oocsi/examples/DirectReceiver/DirectReceiver.pde">DirectReceiver</a> (start this first)</li>
+<li>
+<a href="dist/oocsi/examples/DirectSender/DirectSender.pde">DirectSender</a> (move mouse over the window, receiver window should show a moving square)</li>
+</ul>
+</li>
+<li>
+<p>Client to client message sending and receiving <em>via a channel</em>:</p>
+
+<ul>
+<li>
+<a href="dist/oocsi/examples/ChannelReceiver/ChannelReceiver.pde">ChannelReceiver</a> (start this first)</li>
+<li>
+<a href="dist/oocsi/examples/ChannelSender/ChannelSender.pde">ChannelSender</a> (move mouse over the window, receiver window should show a moving square)</li>
+</ul>
+</li>
+<li>
+<p>Getting an updated list of all connected clients</p>
+
+<ul>
+<li><a href="dist/oocsi/examples/Tools_ClientLister/Tools_ClientLister.pde">Tools_ClientLister</a></li>
+</ul>
+</li>
+</ol>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/iddi/oocsi-processing/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/iddi/oocsi-processing/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/iddi/oocsi-processing"></a> is maintained by <a href="https://github.com/iddi">iddi</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
