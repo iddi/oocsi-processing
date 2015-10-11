@@ -9,6 +9,7 @@ void setup() {
 
   // connect to OOCSI server running on the same machine (localhost)
   // with "receiverName" to be my channel others can send data to
+  // (for more information how to run an OOCSI server refer to: https://iddi.github.io/oocsi/)
   OOCSI oocsi = new OOCSI(this, "receiverName", "localhost");
 
   // subscribe to channel "testchannel"

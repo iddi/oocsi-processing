@@ -8,6 +8,7 @@ void setup() {
 
   // connect to OOCSI server running on the same machine (localhost)
   // with the ID "clientLister"
+  // (for more information how to run an OOCSI server refer to: https://iddi.github.io/oocsi/)
   oocsi = new OOCSI(this, "clientLister", "localhost");
   
   // frame rate of 1 let's this sketch check for clients every second
