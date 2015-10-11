@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="create_distribution" name="Create Processing plugin distribution bundle">
+<project default="createDistribution" name="Create Processing plugin distribution bundle">
     <!--this file was created by Eclipse Runnable JAR Export Wizard-->
     <!--ANT 1.7 is required                                        -->
     <target name="makeJar">
@@ -19,7 +19,19 @@
         	</fileset>
 		</jar>
     </target>
-    <target name="create_distribution" depends="makeJar">
+
+	<target name="copySources" depends="makeJar">
+    	<copy todir="../dist/oocsi/src">
+    	    <fileset dir="../../oocsi/client/src"/>
+    	    <fileset dir="../src"/>
+		</copy>
+    </target>
+
+	<target name="doc" depends="copySources" description="generate documentation">
+		<javadoc sourcepath="../dist/oocsi/src" destdir="../dist/oocsi/reference"/>
+	</target>
+
+    <target name="createDistribution" depends="doc">
     	<zip destfile="../dist/oocsi.zip" basedir="../dist/oocsi"/>
     </target>
 </project>
