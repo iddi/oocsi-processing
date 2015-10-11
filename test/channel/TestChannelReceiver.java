@@ -7,8 +7,7 @@ import processing.core.PApplet;
 /**
  * example application - receives color and position values from OOCSI, on the channel "testchannel"
  * 
- * @author mfunk
- * 
+ * @author matsfunk
  */
 @SuppressWarnings("serial")
 public class TestChannelReceiver extends PApplet {
@@ -19,7 +18,8 @@ public class TestChannelReceiver extends PApplet {
 	public void setup() {
 		size(200, 200);
 
-		// open connection to local OOCSI
+		// open connection to local OOCSI server
+		// (for more information how to run an OOCSI server refer to: https://iddi.github.io/oocsi/)
 		OOCSI oocsi = new OOCSI(this, ("receiver_" + Math.random()).toString().substring(0, 12), "localhost");
 
 		// subscribe to channel "testchannel"
