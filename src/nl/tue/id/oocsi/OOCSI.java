@@ -7,11 +7,12 @@ import processing.core.PApplet;
  * central OOCSI connector for Processing
  * 
  * @author matsfunk
- * 
  */
 public class OOCSI {
 
 	private OOCSICommunicator oocsi;
+	private String previousLogMessage;
+	private int logRepetitionCount = 0;
 
 	/**
 	 * create a new OOCSI network connection
@@ -76,6 +77,7 @@ public class OOCSI {
 	 * @param name
 	 * @param hostname
 	 * @param port
+	 * @param reconnect
 	 */
 	public OOCSI(PApplet parent, String name, String hostname, int port, boolean reconnect) {
 		init(parent, name, hostname, port, reconnect);
@@ -88,6 +90,7 @@ public class OOCSI {
 	 * @param name
 	 * @param hostname
 	 * @param port
+	 * @param reconnect
 	 */
 	private void init(PApplet parent, String name, String hostname, int port, boolean reconnect) {
 		startOOCSIConnection(parent, name, hostname, port, reconnect);
@@ -173,9 +176,11 @@ public class OOCSI {
 	/**
 	 * start OOCSI with a connection and handlers
 	 * 
+	 * @param parent
 	 * @param name
 	 * @param hostname
 	 * @param port
+	 * @param reconnect
 	 */
 	private void startOOCSIConnection(Object parent, String name, String hostname, int port, boolean reconnect) {
 
@@ -201,11 +206,23 @@ public class OOCSI {
 	}
 
 	/**
-	 * log a message on console
+	 * log a message on console, will express repeated messages by adding periods after the first instance
 	 * 
 	 * @param logMessage
 	 */
 	private void log(String logMessage) {
-		System.out.println(logMessage);
+		if (!logMessage.equals(previousLogMessage)) {
+			previousLogMessage = logMessage;
+			System.out.println();
+			System.out.print(logMessage);
+			logRepetitionCount = logMessage.length() - 4;
+		} else {
+			if (logRepetitionCount++ > 60) {
+				System.out.println();
+				System.out.print("   ");
+				logRepetitionCount = 0;
+			}
+			System.out.print(".");
+		}
 	}
 }
