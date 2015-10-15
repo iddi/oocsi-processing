@@ -1,5 +1,12 @@
 import nl.tue.id.oocsi.*;
 
+// **************************************************
+// This examples requires a running OOCSI server!
+//
+// More information how to run an OOCSI server
+// can be found here: https://iddi.github.io/oocsi/)
+// **************************************************
+
 OOCSI oocsi;
 
 void setup() {
