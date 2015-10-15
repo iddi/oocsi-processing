@@ -33,7 +33,7 @@
 
     <target name="createDistribution" depends="doc">
 		<zip destfile="../dist/oocsi.zip">
-			<zipfileset dir="../dist/oocsi" prefix="oocsi/oocsi"/>
+			<zipfileset dir="../dist/oocsi" prefix="oocsi"/>
 		</zip>
     </target>
 </project>
