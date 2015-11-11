@@ -20,7 +20,10 @@ void setup() {
   OOCSI oocsi = new OOCSI(this, "receiverName", "localhost");
 
   // subscribe to channel "testchannel"
+  // either the channel name is used for looking for a handler method...
   oocsi.subscribe("testchannel");
+  // ... or the handler method name can be given explicitly
+  // oocsi.subscribe("testchannel", "testchannel");
 }
 
 void draw() {
@@ -29,10 +32,11 @@ void draw() {
   rect(20, position, 20, 20);
 }
 
-void handleOOCSIEvent(OOCSIEvent event) {
+void testchannel(OOCSIEvent event) {
+
   // assign the new fill color from the OOCSI event
-  fillColor = event.getInt("color", 0);
+  color = event.getInt("color", 0);
+
   // assign the new y position from the OOCSI event
   position = event.getInt("position", 0);
 }
-
