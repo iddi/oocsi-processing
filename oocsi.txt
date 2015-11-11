@@ -7,7 +7,7 @@ name = OOCSI for Processing
 authors = [Mathias Funk](http://www.mathias-funk.com/)
 
 # A web page for your library, NOT a direct link to where to download it.
-url = http://oocsi.github.com/
+url = http://iddi.github.io/oocsi
 
 # The category (or categories) of your library, must be from the following list:
 #   "3D"            "Animation"     "Compilations"      "Data"          
@@ -30,7 +30,7 @@ sentence = Processing client library for the OOCSI system design infrastructure.
 # 'sentence' always will be prepended, so you should start by writing the
 # second sentence here. If your library only works on certain operating systems,
 # mention it here.
-paragraph =  This library provides easy ways to connect a Processing sketch to an OOCSI server and communicate through this connection with other clients on many different platforms, such as Processing, Java, Android, C++, OSC, and HTML/JavaScript via Websockets. Processing sketches can not only send and receive messages between specific clients, but also broadcast and subscribe to channels, which makes coordinating a large number of sketches or devices surprisingly simple and robust. 
+paragraph =  This library provides easy ways to connect a Processing sketch to an OOCSI server and communicate through this connection with other clients on many different platforms, such as Processing, Java, Android, OSC, and HTML/JavaScript via web sockets. Processing sketches can not only send and receive messages between specific clients, but also broadcast and subscribe to channels, which makes coordinating a large number of sketches or devices surprisingly simple and robust. 
 
 # Links in the 'sentence' and 'paragraph' attributes can be inserted using the
 # same syntax as for authors. 
@@ -40,11 +40,11 @@ paragraph =  This library provides easy ways to connect a Processing sketch to a
 # compare different versions of the same library, and check if an update is 
 # available. You should think of it as a counter, counting the total number of 
 # releases you've had.
-version = 70
+version = 80
 
 # The version as the user will see it. If blank, the version attribute will be 
 # used here. This should be a single word, with no spaces.
-prettyVersion = 0.7
+prettyVersion = 0.8
 
 # The min and max revision of Processing compatible with your library.
 # Note that these fields use the revision and not the version of Processing, 
