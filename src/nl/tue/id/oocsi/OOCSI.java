@@ -1,6 +1,7 @@
 package nl.tue.id.oocsi;
 
 import nl.tue.id.oocsi.client.protocol.OOCSIMessage;
+import nl.tue.id.oocsi.client.services.OOCSICall;
 import processing.core.PApplet;
 
 /**
@@ -107,6 +108,39 @@ public class OOCSI {
 	}
 
 	/**
+	 * create a call for service method <callName>
+	 * 
+	 * @param callName
+	 * @return
+	 */
+	public OOCSICall call(String callName) {
+		return oocsi.call(callName);
+	}
+
+	/**
+	 * create a call for service method <callName>
+	 * 
+	 * @param callName
+	 * @param timeoutMS
+	 * @return
+	 */
+	public OOCSICall call(String callName, int timeoutMS) {
+		return oocsi.call(callName, timeoutMS);
+	}
+
+	/**
+	 * create a call for service method <callName>
+	 * 
+	 * @param callName
+	 * @param timeoutMS
+	 * @param maxResponses
+	 * @return
+	 */
+	public OOCSICall call(String callName, int timeoutMS, int maxResponses) {
+		return oocsi.call(callName, timeoutMS, maxResponses);
+	}
+
+	/**
 	 * send raw data to given channel
 	 * 
 	 * @param channel
@@ -117,7 +151,7 @@ public class OOCSI {
 	}
 
 	/**
-	 * subscribe to a channel
+	 * subscribe to a channel with a given handler method name <handlerName>
 	 * 
 	 * @param channelName
 	 * @param handlerName
@@ -142,7 +176,21 @@ public class OOCSI {
 			return;
 		}
 
-		subscribe(channelName, "handleOOCSIEvent");
+		oocsi.subscribe(channelName);
+	}
+
+	/**
+	 * register a responder
+	 * 
+	 * @param responderName
+	 */
+	public void register(String responderName) {
+
+		if (!oocsi.isConnected()) {
+			return;
+		}
+
+		oocsi.register(responderName);
 	}
 
 	/**
