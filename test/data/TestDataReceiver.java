@@ -5,7 +5,6 @@ import java.util.Date;
 import nl.tue.id.oocsi.OOCSI;
 import nl.tue.id.oocsi.OOCSIEvent;
 import processing.core.PApplet;
-import processing.core.PVector;
 
 /**
  * example application - receives color and position values from OOCSI, on the channel "datachannel"
@@ -20,7 +19,7 @@ public class TestDataReceiver extends PApplet {
 	double numberDouble = 0;
 	long numberLong = 0;
 	String numberString = "";
-	PVector numberObject = new PVector(0, 0);
+	float[] numberArray = new float[] { 0, 0 };
 	Date dateObject = new Date();
 
 	public void setup() {
@@ -51,7 +50,7 @@ public class TestDataReceiver extends PApplet {
 		text(numberString, 20, 20);
 		text(dateObject.toString(), 20, height - 20);
 		fill(220);
-		rect(numberObject.x, numberObject.y, 20, 20);
+		rect(numberArray[0], numberArray[1], 20, 20);
 	}
 
 	public void datachannel(OOCSIEvent event) {
@@ -72,8 +71,7 @@ public class TestDataReceiver extends PApplet {
 		numberString = event.getString("string");
 
 		// get, cast and save array value
-		float[] floatArray = (float[]) event.getObject("array");
-		numberObject = new PVector(floatArray[0], floatArray[1]);
+		numberArray = (float[]) event.getObject("array");
 
 		// get, cast and save Date object value
 		dateObject = (Date) event.getObject("object");

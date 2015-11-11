@@ -17,6 +17,7 @@ public class TestChannelReceiver extends PApplet {
 
 	public void setup() {
 		size(200, 200);
+		noStroke();
 
 		// open connection to local OOCSI server
 		// (for more information how to run an OOCSI server refer to: https://iddi.github.io/oocsi/)
