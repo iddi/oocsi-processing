@@ -23,7 +23,10 @@ public class TestChannelReceiver extends PApplet {
 		OOCSI oocsi = new OOCSI(this, ("receiver_" + Math.random()).toString().substring(0, 12), "localhost");
 
 		// subscribe to channel "testchannel"
+		// either the channel name is used for looking for a handler method...
 		oocsi.subscribe("testchannel");
+		// ... or the handler method name can be given explicitly
+		// oocsi.subscribe("testchannel", "testchannel");
 	}
 
 	public void draw() {
@@ -34,7 +37,7 @@ public class TestChannelReceiver extends PApplet {
 		rect(20, position, 20, 20);
 	}
 
-	public void handleOOCSIEvent(OOCSIEvent event) {
+	public void testchannel(OOCSIEvent event) {
 
 		// save color value
 		color = event.getInt("color", 0);
