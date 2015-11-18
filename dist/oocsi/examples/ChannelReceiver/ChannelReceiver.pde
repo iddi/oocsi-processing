@@ -35,7 +35,7 @@ void draw() {
 void testchannel(OOCSIEvent event) {
 
   // assign the new fill color from the OOCSI event
-  color = event.getInt("color", 0);
+  fillColor = event.getInt("color", 0);
 
   // assign the new y position from the OOCSI event
   position = event.getInt("position", 0);
