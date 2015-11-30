@@ -98,6 +98,15 @@ public class OOCSI {
 	}
 
 	/**
+	 * returns whether the OOCSI client was able to connect to a server (already)
+	 * 
+	 * @return
+	 */
+	public boolean isConnected() {
+		return oocsi.isConnected();
+	}
+
+	/**
 	 * send data through a channel given by the channelName
 	 * 
 	 * @param channelName
