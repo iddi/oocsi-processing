@@ -3,6 +3,8 @@ import nl.tue.id.oocsi.*;
 // **************************************************
 // This examples requires a running OOCSI server!
 //
+// How to do that? Check: Examples > LocalServer
+//
 // More information how to run an OOCSI server
 // can be found here: https://iddi.github.io/oocsi/)
 // **************************************************
@@ -14,7 +16,7 @@ void setup() {
   background(120);
   frameRate(10);
 
-  // connect ot OOCSI server running on the same machine (localhost)
+  // connect to OOCSI server running on the same machine (localhost)
   // with "senderName" to be my channel others can send data to
   // (for more information how to run an OOCSI server refer to: https://iddi.github.io/oocsi/)
   oocsi = new OOCSI(this, "senderName", "localhost");
