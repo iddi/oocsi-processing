@@ -2,7 +2,6 @@ package nl.tue.id.oocsi;
 
 import nl.tue.id.oocsi.client.protocol.OOCSIMessage;
 import nl.tue.id.oocsi.client.services.OOCSICall;
-import processing.core.PApplet;
 
 /**
  * central OOCSI connector for Processing
@@ -21,7 +20,7 @@ public class OOCSI {
 	 * @param parent
 	 * @param name
 	 */
-	public OOCSI(PApplet parent, String name) {
+	public OOCSI(Object parent, String name) {
 		init(parent, name, null, -1, false);
 	}
 
@@ -32,7 +31,7 @@ public class OOCSI {
 	 * @param name
 	 * @param reconnect
 	 */
-	public OOCSI(PApplet parent, String name, boolean reconnect) {
+	public OOCSI(Object parent, String name, boolean reconnect) {
 		init(parent, name, null, -1, reconnect);
 	}
 
@@ -43,7 +42,7 @@ public class OOCSI {
 	 * @param name
 	 * @param hostname
 	 */
-	public OOCSI(PApplet parent, String name, String hostname) {
+	public OOCSI(Object parent, String name, String hostname) {
 		init(parent, name, hostname, 4444, false);
 	}
 
@@ -55,7 +54,7 @@ public class OOCSI {
 	 * @param hostname
 	 * @param reconnect
 	 */
-	public OOCSI(PApplet parent, String name, String hostname, boolean reconnect) {
+	public OOCSI(Object parent, String name, String hostname, boolean reconnect) {
 		init(parent, name, hostname, 4444, reconnect);
 	}
 
@@ -67,7 +66,7 @@ public class OOCSI {
 	 * @param hostname
 	 * @param port
 	 */
-	public OOCSI(PApplet parent, String name, String hostname, int port) {
+	public OOCSI(Object parent, String name, String hostname, int port) {
 		init(parent, name, hostname, port, false);
 	}
 
@@ -80,7 +79,7 @@ public class OOCSI {
 	 * @param port
 	 * @param reconnect
 	 */
-	public OOCSI(PApplet parent, String name, String hostname, int port, boolean reconnect) {
+	public OOCSI(Object parent, String name, String hostname, int port, boolean reconnect) {
 		init(parent, name, hostname, port, reconnect);
 	}
 
@@ -93,7 +92,7 @@ public class OOCSI {
 	 * @param port
 	 * @param reconnect
 	 */
-	private void init(PApplet parent, String name, String hostname, int port, boolean reconnect) {
+	private void init(Object parent, String name, String hostname, int port, boolean reconnect) {
 		startOOCSIConnection(parent, name, hostname, port, reconnect);
 	}
 
@@ -189,7 +188,8 @@ public class OOCSI {
 	}
 
 	/**
-	 * register a responder
+	 * register a responder; requires a method with the given responderName with parameters (OOCSIEvent, Map<String,
+	 * Object>)
 	 * 
 	 * @param responderName
 	 */
