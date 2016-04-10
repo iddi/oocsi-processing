@@ -231,6 +231,15 @@ public class OOCSI {
 	}
 
 	/**
+	 * retrieve the internal OOCSICommunicator
+	 * 
+	 * @return
+	 */
+	OOCSICommunicator getCommunicator() {
+		return oocsi;
+	}
+
+	/**
 	 * start OOCSI with a connection and handlers
 	 * 
 	 * @param parent
