@@ -18,6 +18,15 @@ public class OOCSI {
 	 * create a new OOCSI network connection
 	 * 
 	 * @param parent
+	 */
+	public OOCSI(Object parent) {
+		init(parent, null, null, -1, false);
+	}
+
+	/**
+	 * create a new OOCSI network connection
+	 * 
+	 * @param parent
 	 * @param name
 	 */
 	public OOCSI(Object parent, String name) {
