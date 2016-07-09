@@ -197,8 +197,7 @@ public class OOCSI {
 	}
 
 	/**
-	 * register a responder; requires a method with the given responderName with parameters (OOCSIEvent, Map<String,
-	 * Object>)
+	 * register a responder; requires a method with the given responderName with parameters (OOCSIEvent, OOCSIData)
 	 * 
 	 * @param responderName
 	 */
@@ -209,6 +208,21 @@ public class OOCSI {
 		}
 
 		oocsi.register(responderName);
+	}
+
+	/**
+	 * register a responder; requires a method with the given responderName with parameters (OOCSIEvent, OOCSIData)
+	 * 
+	 * @param responderName
+	 * @param responderFunctionName
+	 */
+	public void register(String responderName, String responderFunctionName) {
+
+		if (!oocsi.isConnected()) {
+			return;
+		}
+
+		oocsi.register(responderName, responderFunctionName);
 	}
 
 	/**
