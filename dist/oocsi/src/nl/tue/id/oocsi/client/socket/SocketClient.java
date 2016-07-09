@@ -21,6 +21,7 @@ import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import nl.tue.id.oocsi.client.protocol.Handler;
+import nl.tue.id.oocsi.client.protocol.MultiHandler;
 import nl.tue.id.oocsi.client.services.OOCSICall;
 import nl.tue.id.oocsi.client.services.Responder;
 
@@ -180,6 +181,13 @@ public class SocketClient {
 				// first data has arrived = connection is ok
 				connectionEstablished = true;
 
+				// subscribe to all open channels
+				if (reconnect) {
+					for (String channelName : channels.keySet()) {
+						this.internalSubscribe(channelName);
+					}
+				}
+
 				// if ok, run the communication in a different thread
 				new Thread(new Runnable() {
 					public void run() {
@@ -220,7 +228,7 @@ public class SocketClient {
 
 								// get channel
 								Handler c = channels.get(channel);
-								if (c == null && channel.equals(name)) {
+								if (c == null && channel.equals(name.replaceFirst(":.*", ""))) {
 									c = channels.get(SELF);
 								}
 
@@ -228,6 +236,8 @@ public class SocketClient {
 								try {
 									dataMap = Handler.parseData(data);
 								} catch (ClassNotFoundException e) {
+									dataMap = null;
+								} catch (IOException e) {
 									dataMap = null;
 								}
 
@@ -321,6 +331,15 @@ public class SocketClient {
 	}
 
 	/**
+	 * return client name
+	 * 
+	 * @return
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
 	 * disconnect from OOCSI
 	 * 
 	 */
@@ -382,16 +401,42 @@ public class SocketClient {
 	 */
 	public void subscribe(String channelName, Handler handler) {
 
+		internalSubscribe(channelName);
+
+		// add handler to internal multi-handler
+		internalAddHandler(channelName, handler);
+	}
+
+	/**
+	 * @param channelName
+	 */
+	private void internalSubscribe(String channelName) {
 		// register at server
 		send("subscribe " + channelName);
 
 		// check for replacement
 		if (channels.get(channelName) != null) {
-			log(" - existing subscription replaced for " + channelName);
+			log(" - reconnected subscription for " + channelName);
 		}
+	}
 
-		// add handler
-		channels.put(channelName, handler);
+	/**
+	 * manage internal multi-handler for this channel: will add the given handler to an existing multi-handler's
+	 * internal list, or create a new multi-handler with the given handler as the first sub-handler
+	 * 
+	 * @param channelName
+	 * @param handler
+	 */
+	private void internalAddHandler(String channelName, Handler handler) {
+		if (channels.containsKey(channelName)) {
+			Handler h = channels.get(channelName);
+			if (h instanceof MultiHandler) {
+				MultiHandler mh = (MultiHandler) h;
+				mh.add(handler);
+			}
+		} else {
+			channels.put(channelName, new MultiHandler(handler));
+		}
 	}
 
 	/**
@@ -406,7 +451,7 @@ public class SocketClient {
 
 		// check for replacement
 		if (channels.get(SELF) != null) {
-			log(" - existing subscription replaced for " + name);
+			log(" - reconnected subscription for " + name);
 		}
 
 		// add handler
@@ -487,11 +532,9 @@ public class SocketClient {
 	 * @return
 	 */
 	public String clients() {
-		synchronized (tempIncomingMessages) {
-			tempIncomingMessages.clear();
-			send("clients");
-			return syncPoll();
-		}
+		tempIncomingMessages.clear();
+		send("clients");
+		return syncPoll();
 	}
 
 	/**
@@ -500,11 +543,9 @@ public class SocketClient {
 	 * @return
 	 */
 	public String channels() {
-		synchronized (tempIncomingMessages) {
-			tempIncomingMessages.clear();
-			send("channels");
-			return syncPoll();
-		}
+		tempIncomingMessages.clear();
+		send("channels");
+		return syncPoll();
 	}
 
 	/**
@@ -514,11 +555,9 @@ public class SocketClient {
 	 * @return
 	 */
 	public String channels(String channelName) {
-		synchronized (tempIncomingMessages) {
-			tempIncomingMessages.clear();
-			send("channels " + channelName);
-			return syncPoll();
-		}
+		tempIncomingMessages.clear();
+		send("channels " + channelName);
+		return syncPoll();
 	}
 
 	/**

@@ -1,8 +1,8 @@
 package nl.tue.id.oocsi.client.services;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import nl.tue.id.oocsi.OOCSIData;
 import nl.tue.id.oocsi.OOCSIEvent;
 import nl.tue.id.oocsi.client.OOCSIClient;
 import nl.tue.id.oocsi.client.protocol.Handler;
@@ -26,12 +26,21 @@ abstract public class Responder extends Handler {
 	}
 
 	/**
+	 * constructor for instantiation without service methods
+	 * 
+	 * @param oocsi
+	 */
+	public Responder(OOCSIClient oocsi) {
+		this(oocsi, null);
+	}
+
+	/**
 	 * constructor for full instantiation without service methods
 	 * 
 	 * @param oocsi
 	 * @param callName
 	 */
-	public Responder(OOCSIClient oocsi, String callName) {
+	private Responder(OOCSIClient oocsi, String callName) {
 		this.oocsi = oocsi;
 		this.callName = callName;
 	}
@@ -61,15 +70,16 @@ abstract public class Responder extends Handler {
 	 * java.lang.String)
 	 */
 	@Override
-	public void receive(String sender, Map<String, Object> data, long timestamp, String channel, final String recipient) {
+	public void receive(String sender, Map<String, Object> data, long timestamp, String channel,
+			final String recipient) {
 
 		// check if this needs a response
-		if (!data.get(OOCSICall.MESSAGE_HANDLE).equals(callName)) {
+		if (data.get(OOCSICall.MESSAGE_HANDLE) == null || !data.get(OOCSICall.MESSAGE_HANDLE).equals(callName)) {
 			return;
 		}
 
 		// correct call to respond to
-		Map<String, Object> response = new HashMap<String, Object>();
+		OOCSIData response = new OOCSIData();
 		respond(new OOCSIEvent(channel, data, sender, timestamp) {
 
 			@Override
@@ -80,7 +90,7 @@ abstract public class Responder extends Handler {
 
 		// send response
 		response.put(OOCSICall.MESSAGE_ID, data.get(OOCSICall.MESSAGE_ID));
-		new OOCSIMessage(oocsi, sender).data("", 1).data(response).send();
+		new OOCSIMessage(oocsi, sender).data(response).send();
 	}
 
 	/**
@@ -89,6 +99,6 @@ abstract public class Responder extends Handler {
 	 * @param event
 	 * @param response
 	 */
-	abstract public void respond(OOCSIEvent event, Map<String, Object> response);
+	abstract public void respond(OOCSIEvent event, OOCSIData response);
 
 }

@@ -2,10 +2,10 @@ package nl.tue.id.oocsi;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Map;
 
 import nl.tue.id.oocsi.client.OOCSIClient;
 import nl.tue.id.oocsi.client.protocol.EventHandler;
+import nl.tue.id.oocsi.client.protocol.Handler;
 import nl.tue.id.oocsi.client.protocol.OOCSIMessage;
 import nl.tue.id.oocsi.client.services.OOCSICall;
 import nl.tue.id.oocsi.client.services.Responder;
@@ -18,7 +18,6 @@ import nl.tue.id.oocsi.client.services.Responder;
 public class OOCSICommunicator extends OOCSIClient {
 
 	private Object parent;
-	private String name;
 
 	/**
 	 * constructor
@@ -30,7 +29,6 @@ public class OOCSICommunicator extends OOCSIClient {
 		super(name);
 
 		this.parent = parent;
-		this.name = name;
 	}
 
 	/*
@@ -171,7 +169,38 @@ public class OOCSICommunicator extends OOCSIClient {
 
 			return false;
 		}
+	}
 
+	/**
+	 * create a simple handler that calls the method with the given handlerName in the parent object (without
+	 * parameters)
+	 * 
+	 * @param handlerName
+	 * @return
+	 */
+	public Handler createSimpleCallerHandler(String handlerName) {
+
+		try {
+			final Method handler = parent.getClass().getDeclaredMethod(handlerName, new Class[] {});
+			return new EventHandler() {
+
+				@Override
+				public void receive(OOCSIEvent event) {
+					try {
+						handler.invoke(parent, new Object[] {});
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+					} catch (IllegalArgumentException e) {
+						e.printStackTrace();
+					} catch (InvocationTargetException e) {
+						e.printStackTrace();
+					}
+				}
+			};
+		} catch (Exception e) {
+			// not found, just return null
+			return null;
+		}
 	}
 
 	/**
@@ -200,11 +229,11 @@ public class OOCSICommunicator extends OOCSIClient {
 
 		try {
 			final Method handler = parent.getClass().getDeclaredMethod(handlerName,
-					new Class[] { OOCSIEvent.class, Map.class });
-			subscribe(responderName, new Responder(this, responderName) {
+					new Class[] { OOCSIEvent.class, OOCSIData.class });
+			Responder responder = new Responder(this) {
 
 				@Override
-				public void respond(OOCSIEvent event, java.util.Map<String, Object> response) {
+				public void respond(OOCSIEvent event, OOCSIData response) {
 					try {
 						handler.invoke(parent, new Object[] { event, response });
 					} catch (IllegalAccessException e) {
@@ -215,7 +244,9 @@ public class OOCSICommunicator extends OOCSIClient {
 						e.printStackTrace();
 					}
 				}
-			});
+			};
+			responder.setCallName(responderName);
+			register(responderName, responder);
 
 			log(" - registered " + responderName + " as call responder");
 
