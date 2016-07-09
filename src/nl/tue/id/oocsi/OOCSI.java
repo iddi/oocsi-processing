@@ -1,5 +1,6 @@
 package nl.tue.id.oocsi;
 
+import nl.tue.id.oocsi.client.protocol.Handler;
 import nl.tue.id.oocsi.client.protocol.OOCSIMessage;
 import nl.tue.id.oocsi.client.services.OOCSICall;
 
@@ -260,6 +261,16 @@ public class OOCSI {
 	 */
 	OOCSICommunicator getCommunicator() {
 		return oocsi;
+	}
+
+	/**
+	 * create a handler for the given method name (handlerName), which must be an existing method in the parent class
+	 * 
+	 * @param handlerName
+	 * @return
+	 */
+	Handler getHandlerFor(String handlerName) {
+		return getCommunicator().createSimpleCallerHandler(handlerName);
 	}
 
 	/**

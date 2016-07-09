@@ -5,7 +5,6 @@ import nl.tue.id.oocsi.client.behavior.OOCSIConsensus;
 import nl.tue.id.oocsi.client.behavior.OOCSIGather;
 import nl.tue.id.oocsi.client.behavior.OOCSISpread;
 import nl.tue.id.oocsi.client.behavior.OOCSISync;
-import nl.tue.id.oocsi.client.protocol.Handler;
 
 public class Constellation {
 
@@ -17,8 +16,9 @@ public class Constellation {
 	}
 
 	static public final OOCSIConsensus<Integer> createIntegerConsensus(OOCSI oocsi, String channelName, String key,
-			int timeout, Handler handler) {
-		return OOCSIConsensus.createIntegerConsensus(oocsi.getCommunicator(), channelName, key, timeout, handler);
+			int timeout, String handlerName) {
+		return OOCSIConsensus.createIntegerConsensus(oocsi.getCommunicator(), channelName, key, timeout,
+				oocsi.getHandlerFor(handlerName));
 	}
 
 	static public OOCSIConsensus<Integer> createIntegerAvgConsensus(OOCSI oocsi, String channelName, String key,
@@ -27,8 +27,9 @@ public class Constellation {
 	}
 
 	static public OOCSIConsensus<Integer> createIntegerAvgConsensus(OOCSI oocsi, String channelName, String key,
-			int timeoutMS, Handler handler) {
-		return OOCSIConsensus.createIntegerAvgConsensus(oocsi.getCommunicator(), channelName, key, timeoutMS, handler);
+			int timeoutMS, String handlerName) {
+		return OOCSIConsensus.createIntegerAvgConsensus(oocsi.getCommunicator(), channelName, key, timeoutMS,
+				oocsi.getHandlerFor(handlerName));
 	}
 
 	static public OOCSIConsensus<Float> createFloatAvgConsensus(OOCSI oocsi, String channelName, String key,
@@ -37,8 +38,9 @@ public class Constellation {
 	}
 
 	static public OOCSIConsensus<Float> createFloatAvgConsensus(OOCSI oocsi, String channelName, String key,
-			int timeoutMS, Handler handler) {
-		return OOCSIConsensus.createFloatAvgConsensus(oocsi.getCommunicator(), channelName, key, timeoutMS, handler);
+			int timeoutMS, String handlerName) {
+		return OOCSIConsensus.createFloatAvgConsensus(oocsi.getCommunicator(), channelName, key, timeoutMS,
+				oocsi.getHandlerFor(handlerName));
 	}
 
 	static public OOCSIConsensus<String> createStringConsensus(OOCSI oocsi, String channelName, String key,
@@ -47,8 +49,9 @@ public class Constellation {
 	}
 
 	static public OOCSIConsensus<String> createStringConsensus(OOCSI oocsi, String channelName, String key,
-			int timeoutMS, Handler handler) {
-		return OOCSIConsensus.createStringConsensus(oocsi.getCommunicator(), channelName, key, timeoutMS, handler);
+			int timeoutMS, String handlerName) {
+		return OOCSIConsensus.createStringConsensus(oocsi.getCommunicator(), channelName, key, timeoutMS,
+				oocsi.getHandlerFor(handlerName));
 	}
 
 	static public OOCSIConsensus<Boolean> createBooleanConsensus(OOCSI oocsi, String channelName, String key,
@@ -57,8 +60,9 @@ public class Constellation {
 	}
 
 	static public OOCSIConsensus<Boolean> createBooleanConsensus(OOCSI oocsi, String channelName, String key,
-			int timeoutMS, Handler handler) {
-		return OOCSIConsensus.createBooleanConsensus(oocsi.getCommunicator(), channelName, key, timeoutMS, handler);
+			int timeoutMS, String handlerName) {
+		return OOCSIConsensus.createBooleanConsensus(oocsi.getCommunicator(), channelName, key, timeoutMS,
+				oocsi.getHandlerFor(handlerName));
 	}
 
 	/** GATHER */
@@ -75,9 +79,11 @@ public class Constellation {
 
 	/** SYNC */
 
-	public static OOCSISync createSync(OOCSI oocsi, String channelName, int timeout, Handler handler) {
-		return new OOCSISync(oocsi.getCommunicator(), channelName, timeout, handler);
+	public static OOCSISync createSync(OOCSI oocsi, String channelName, int timeout, String handlerName) {
+		return new OOCSISync(oocsi.getCommunicator(), channelName, timeout, oocsi.getHandlerFor(handlerName));
 	}
+
+	/** AWARENESS */
 
 	public static OOCSIAwareness createAwareness(OOCSI oocsi, String channelName, String... keys) {
 		return new OOCSIAwareness(oocsi.getCommunicator(), channelName, keys);
