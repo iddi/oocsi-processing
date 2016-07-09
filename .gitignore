@@ -9,3 +9,4 @@ core.jar
 /lib
 /bin
 /.externalToolBuilders
+/.settings/
