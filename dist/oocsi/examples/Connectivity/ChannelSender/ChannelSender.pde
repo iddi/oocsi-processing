@@ -1,13 +1,13 @@
 import nl.tue.id.oocsi.*;
 
-// **************************************************
+// ******************************************************
 // This examples requires a running OOCSI server!
 //
-// How to do that? Check: Examples > LocalServer
+// How to do that? Check: Examples > Tools > LocalServer
 //
 // More information how to run an OOCSI server
 // can be found here: https://iddi.github.io/oocsi/)
-// **************************************************
+// ******************************************************
 
 OOCSI oocsi;
 
@@ -16,7 +16,7 @@ void setup() {
   background(120);
   frameRate(10);
 
-  // connect to OOCSI server running on the same machine (localhost)
+  // connect ot OOCSI server running on the same machine (localhost)
   // with "senderName" to be my channel others can send data to
   // (for more information how to run an OOCSI server refer to: https://iddi.github.io/oocsi/)
   oocsi = new OOCSI(this, "senderName", "localhost");
@@ -25,8 +25,8 @@ void setup() {
 void draw() {
   // send to OOCSI ...
   oocsi
-    // on channel "receiverName"...
-  .channel("receiverName")
+    // on channel "testchannel"...
+  .channel("testchannel")
     // data labeled "color"...
     .data("color", mouseX)
       // data labeled "position"...
@@ -34,4 +34,3 @@ void draw() {
         // send finally
         .send();
 }
-

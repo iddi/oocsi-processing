@@ -1,14 +1,14 @@
 import nl.tue.id.oocsi.*;
 import java.util.*;
 
-// **************************************************
+// ******************************************************
 // This examples requires a running OOCSI server!
 //
-// How to do that? Check: Examples > LocalServer
+// How to do that? Check: Examples > Tools > LocalServer
 //
 // More information how to run an OOCSI server
 // can be found here: https://iddi.github.io/oocsi/)
-// **************************************************
+// ******************************************************
 
 // different variables for different data types:
 // numbers
