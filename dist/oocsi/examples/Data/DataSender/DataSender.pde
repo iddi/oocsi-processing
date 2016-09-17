@@ -2,7 +2,7 @@ import nl.tue.id.oocsi.*;
 import java.util.*;
 
 // **************************************************
-// This examples requires a running OOCSI server!
+// This example requires a running OOCSI server!
 //
 // How to do that? Check: Examples > LocalServer
 //

@@ -3,7 +3,7 @@ import java.util.concurrent.*;
 import nl.tue.id.oocsi.*;
 
 // ******************************************************
-// This examples requires a running OOCSI server!
+// This example requires a running OOCSI server!
 //
 // How to do that? Check: Examples > Tools > LocalServer
 //

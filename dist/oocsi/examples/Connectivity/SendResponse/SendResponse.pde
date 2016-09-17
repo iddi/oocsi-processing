@@ -2,7 +2,7 @@ import nl.tue.id.oocsi.*;
 import nl.tue.id.oocsi.client.services.*;
 
 // ******************************************************
-// This examples requires a running OOCSI server!
+// This example requires a running OOCSI server!
 //
 // How to do that? Check: Examples > Tools > LocalServer
 //

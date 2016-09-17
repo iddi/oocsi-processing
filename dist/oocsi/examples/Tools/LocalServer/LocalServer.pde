@@ -1,7 +1,7 @@
 import nl.tue.id.oocsi.server.*;
 
 // **************************************************
-// This examples provides a running OOCSI server!
+// This example provides a running OOCSI server!
 //
 // More information how to run an OOCSI server
 // can be found here: https://iddi.github.io/oocsi/)
