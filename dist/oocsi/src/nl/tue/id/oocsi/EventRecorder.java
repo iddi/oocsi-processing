@@ -29,6 +29,9 @@ import nl.tue.id.oocsi.client.socket.Base64Coder;
  */
 public class EventRecorder {
 
+	public static final int PLAY_TO_CHANNEL = 0;
+	public static final int PLAY_TO_SENDER = 1;
+
 	// time resolution for recording and play-back
 	private static final int PPQ = 8;
 
@@ -37,7 +40,13 @@ public class EventRecorder {
 	private Sequence activeSequence;
 	private Date start;
 
+	private int playBackBehavior = PLAY_TO_CHANNEL;
+
 	public EventRecorder(final OOCSI oocsi, final String channelName) {
+		this(oocsi, channelName, PLAY_TO_CHANNEL);
+	}
+
+	public EventRecorder(final OOCSI oocsi, final String channelName, int playBackBehavior) {
 		OOCSI oocsiConnection = oocsi;
 
 		// install MIDI sub-system
@@ -51,13 +60,18 @@ public class EventRecorder {
 				sequencer.addMetaEventListener(new MetaEventListener() {
 					@Override
 					public void meta(MetaMessage meta) {
-						String x = new String(meta.getData());
-						String[] pieces = x.split(",", 2);
+						String messageData = new String(meta.getData());
+						String[] pieces = messageData.split(",", 2);
 						if (pieces[0] != null && pieces[0].length() > 0 && pieces[1] != null
 								&& pieces[1].length() > 0) {
+							String sender = pieces[0];
 							Map<String, Object> data = deserialize(pieces[1]);
 							if (data != null) {
-								oocsi.channel(channelName).data(data).send();
+								if (EventRecorder.this.playBackBehavior == PLAY_TO_CHANNEL) {
+									oocsi.channel(channelName).data(data).send();
+								} else {
+									oocsi.channel(sender).data(data).send();
+								}
 							}
 						}
 					}
@@ -72,7 +86,9 @@ public class EventRecorder {
 			oocsiConnection.getCommunicator().subscribe(channelName, new EventHandler() {
 
 				public void receive(OOCSIEvent event) {
-					recordEvent(event.getRecipient(), serialize(event.data));
+					if (!event.sender.equals(oocsi.getCommunicator().getName())) {
+						recordEvent(event.getRecipient(), serialize(event.data));
+					}
 				}
 
 			});
