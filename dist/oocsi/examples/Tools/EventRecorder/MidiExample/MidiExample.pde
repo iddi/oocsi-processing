@@ -6,31 +6,50 @@ import processing.core.PApplet;
 import processing.core.PVector;
 import themidibus.MidiBus;
 
+// ******************************************************
+// This example requires a running OOCSI server!
+//
+// How to do that? Check: Examples > Tools > LocalServer
+//
+// More information how to run an OOCSI server
+// can be found here: https://iddi.github.io/oocsi/)
+// ******************************************************
+
 // reference to local OOCSI
 OOCSI oocsiPlayer;
+
+// OOCSI event recorder 
 EventRecorder oocsiLooper;
-PVector pos = new PVector();
+
+// MIDI
 MidiChannel channel;
-private MidiBus mb;
-private int lastPitch = 0;
+MidiBus mb;
+
+// visualization
+PVector pos = new PVector();
+int lastPitch = 0;
 
 public void setup() {
   size(200, 200);
   noStroke();
 
   // connect to OOCSI server running on the same machine (localhost)
-  // with the ID "sequencer" for the looper
+  // with the ID "sequencer" for the looper which listens for events and plays them back
   OOCSI oocsiSequencer = new OOCSI(this, "sequencer", "localhost");
   oocsiLooper = new EventRecorder(oocsiSequencer, "sequelChannel");
+  
+  // autostart
   oocsiLooper.play();
   oocsiLooper.startRecording();
 
-  // register a second OOCSI client on the same server that can send events and receive recorded events back
+  // register a second OOCSI client on the same server that can send events and
+  // receive recorded events back
   oocsiPlayer = new OOCSI(this, "player", "localhost");
   oocsiPlayer.subscribe("sequelChannel");
 
-  // MIDI sub system
+  // connect MIDI sub system, first list MIDI devices
   MidiBus.list();
+  // then connect to one of them
   mb = new MidiBus(this, -1, "Bus 1");
 }
 
@@ -50,7 +69,7 @@ public void draw() {
   rectMode(CORNER);
   rect(0, 0, width, height);
 
-  // restart looper (trigger start and record at the same time)
+  // restart looper after a certain amount of frames (trigger start and record at the same time)
   if (frameCount % 360 == 0) {
     oocsiLooper.startRecording();
     oocsiLooper.play();
@@ -58,6 +77,10 @@ public void draw() {
 }
 
 public void mousePressed() {
+  
+  // play new event
+  playEvent(mouseX);
+  
   // draw new event
   drawEvent(mouseX, mouseY);
 
@@ -65,15 +88,18 @@ public void mousePressed() {
   oocsiPlayer.channel("sequelChannel").data("x", mouseX).data("y", mouseY).send();
 }
 
-private void drawEvent(float x, float y) {
-
+// play MIDI event
+void playEvent(float x) {
   int channel = 1;
   int pitch = (int) map(x, 0, width, 40, 90);
   int velocity = 80;
   mb.sendNoteOff(channel, lastPitch, velocity);
   mb.sendNoteOn(channel, pitch, velocity);
   lastPitch = pitch;
+}
 
+// draw MIDI event
+void drawEvent(float x, float y) {
   // yellow fill for rectangle to plot out
   fill(255, 255, 0, 120);
   rectMode(CENTER);
