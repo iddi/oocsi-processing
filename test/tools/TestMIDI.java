@@ -12,7 +12,7 @@ import themidibus.MidiBus;
 public class TestMIDI extends PApplet {
 
 	// reference to local OOCSI
-	OOCSI oocsi2;
+	OOCSI oocsiPlayer;
 	EventRecorder oocsiLooper;
 	PVector pos = new PVector();
 	MidiChannel channel;
@@ -25,14 +25,14 @@ public class TestMIDI extends PApplet {
 
 		// connect to OOCSI server running on the same machine (localhost)
 		// with the ID "sequencer" for the looper
-		OOCSI oocsi = new OOCSI(this, "sequencer", "localhost");
-		oocsiLooper = new EventRecorder(oocsi, "sequelChannel");
+		OOCSI oocsiSequencer = new OOCSI(this, "sequencer", "localhost");
+		oocsiLooper = new EventRecorder(oocsiSequencer, "sequelChannel");
 		oocsiLooper.play();
 		oocsiLooper.startRecording();
 
 		// register a second OOCSI client on the same server that can send events and receive recorded events back
-		oocsi2 = new OOCSI(this, "player", "localhost");
-		oocsi2.subscribe("sequelChannel");
+		oocsiPlayer = new OOCSI(this, "player", "localhost");
+		oocsiPlayer.subscribe("sequelChannel");
 
 		// MIDI sub system
 		MidiBus.list();
@@ -68,7 +68,7 @@ public class TestMIDI extends PApplet {
 		drawEvent(mouseX, mouseY);
 
 		// save new event to loop
-		oocsi2.channel("sequelChannel").data("x", mouseX).data("y", mouseY).send();
+		oocsiPlayer.channel("sequelChannel").data("x", mouseX).data("y", mouseY).send();
 	}
 
 	private void drawEvent(float x, float y) {
