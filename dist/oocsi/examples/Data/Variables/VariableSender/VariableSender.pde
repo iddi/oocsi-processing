@@ -21,8 +21,9 @@ void setup() {
   // (for more information how to run an OOCSI server refer to: https://iddi.github.io/oocsi/)
   OOCSI oocsi = new OOCSI(this, null, "localhost");
 
-  // create OOCSI variable with key "color" and data type Integer (int)
+  // create OOCSI variable on channel "varChannel" with key "posX" and data type Integer (int)
   ovX = Constellation.createInteger(oocsi, "varChannel", "posX");
+  // create OOCSI variable on channel "varChannel" with key "posY" and data type Integer (int)
   ovY = Constellation.createInteger(oocsi, "varChannel", "posY");
 }
 
