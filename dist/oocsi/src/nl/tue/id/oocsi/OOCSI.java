@@ -169,6 +169,20 @@ public class OOCSI {
 	}
 
 	/**
+	 * subscribe to a channel
+	 * 
+	 * @param channelName
+	 */
+	public void subscribe(String channelName) {
+
+		if (!oocsi.isConnected()) {
+			return;
+		}
+
+		oocsi.subscribe(channelName);
+	}
+
+	/**
 	 * subscribe to a channel with a given handler method name <handlerName>
 	 * 
 	 * @param channelName
@@ -184,17 +198,41 @@ public class OOCSI {
 	}
 
 	/**
-	 * subscribe to a channel
+	 * subscribe to a channel with a given handler method name <handlerName>; limits the rate of incoming events to
+	 * <rate> events per <seconds> secs
 	 * 
 	 * @param channelName
+	 * @param handlerName
+	 * @param rate
+	 * @param seconds
 	 */
-	public void subscribe(String channelName) {
+	public void subscribe(String channelName, String handlerName, int rate, int seconds) {
 
 		if (!oocsi.isConnected()) {
 			return;
 		}
 
-		oocsi.subscribe(channelName);
+		oocsi.subscribe(channelName, handlerName, rate, seconds);
+	}
+
+	/**
+	 * subscribe to a channel with a given handler method name <handlerName>; limits the rate of incoming events to
+	 * <rate> events per <seconds> secs; <ratePerSender> controls whether we limit the rate of incoming event per sender
+	 * or for all events coming in from all senders
+	 * 
+	 * @param channelName
+	 * @param handlerName
+	 * @param rate
+	 * @param seconds
+	 * @param ratePerSender
+	 */
+	public void subscribe(String channelName, String handlerName, int rate, int seconds, boolean ratePerSender) {
+
+		if (!oocsi.isConnected()) {
+			return;
+		}
+
+		oocsi.subscribe(channelName, handlerName, rate, seconds, ratePerSender);
 	}
 
 	/**

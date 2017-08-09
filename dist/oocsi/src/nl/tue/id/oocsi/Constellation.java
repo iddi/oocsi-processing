@@ -96,7 +96,7 @@ public class Constellation {
 	/** VARIABLE */
 
 	public static OOCSIBoolean createBoolean(OOCSI oocsi, String channelName, String key) {
-		return new OOCSIBoolean(oocsi.getCommunicator(), channelName, key, false);
+		return new OOCSIBoolean(oocsi.getCommunicator(), channelName, key);
 	}
 
 	public static OOCSIBoolean createBoolean(OOCSI oocsi, String channelName, String key, Boolean referenceValue) {
@@ -109,7 +109,7 @@ public class Constellation {
 	}
 
 	public static OOCSIInt createInteger(OOCSI oocsi, String channelName, String key) {
-		return new OOCSIInt(oocsi.getCommunicator(), channelName, key, 0);
+		return new OOCSIInt(oocsi.getCommunicator(), channelName, key);
 	}
 
 	public static OOCSIInt createInteger(OOCSI oocsi, String channelName, String key, Integer referenceValue) {
@@ -122,7 +122,7 @@ public class Constellation {
 	}
 
 	public static OOCSIFloat createFloat(OOCSI oocsi, String channelName, String key) {
-		return new OOCSIFloat(oocsi.getCommunicator(), channelName, key, 0f);
+		return new OOCSIFloat(oocsi.getCommunicator(), channelName, key);
 	}
 
 	public static OOCSIFloat createFloat(OOCSI oocsi, String channelName, String key, Float referenceValue) {
@@ -135,7 +135,7 @@ public class Constellation {
 	}
 
 	public static OOCSILong createLong(OOCSI oocsi, String channelName, String key) {
-		return new OOCSILong(oocsi.getCommunicator(), channelName, key, 0l);
+		return new OOCSILong(oocsi.getCommunicator(), channelName, key);
 	}
 
 	public static OOCSILong createLong(OOCSI oocsi, String channelName, String key, Long referenceValue) {
@@ -147,7 +147,7 @@ public class Constellation {
 	}
 
 	public static OOCSIDouble createDouble(OOCSI oocsi, String channelName, String key) {
-		return new OOCSIDouble(oocsi.getCommunicator(), channelName, key, 0d);
+		return new OOCSIDouble(oocsi.getCommunicator(), channelName, key);
 	}
 
 	public static OOCSIDouble createDouble(OOCSI oocsi, String channelName, String key, Double referenceValue) {
@@ -160,7 +160,7 @@ public class Constellation {
 	}
 
 	public static OOCSIString createString(OOCSI oocsi, String channelName, String key) {
-		return new OOCSIString(oocsi.getCommunicator(), channelName, key, "");
+		return new OOCSIString(oocsi.getCommunicator(), channelName, key);
 	}
 
 	public static OOCSIString createString(OOCSI oocsi, String channelName, String key, String referenceValue) {
