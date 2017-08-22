@@ -27,27 +27,40 @@ void setup() {
   size(600, 400);
   frameRate(30);
 
+  // create a unique name for the visualizer
   String name = "netvis" + random(20);
+  
+  // connect to a server running on the local machine
+  // note: the network visualizer will only work fully, if this 
+  // server has 'logging' switched on
   oocsi = new OOCSI(this, name, "localhost");  
+  
+  // subscribe to a channel with information about all connected clients
   oocsi.subscribe("OOCSI_clients");
-  //oocsi.subscribe("OOCSI_connections");
+  // subscribe to a channel that receives all sent events
   oocsi.subscribe("OOCSI_events");
+  
+  // optional: subscribe to a channel with connection information
+  //oocsi.subscribe("OOCSI_connections");
 }
 
 void draw() {
+
+  // fading effect
   noStroke();
   fill(0, 20);
   rect(0, 0, width, height);
 
+  // draw everything from the center of the screen
   translate(width/2., height/2.);
 
+  // draw all events as lines connecting sender and receiver, one-by-one
   while (!events.isEmpty()) {
     OOCSIEvent e = events.poll();
     String sender = e.getString("sender");
     String recipient = e.getString("recipient");
-    //println(sender);
 
-    // sender first
+    // sender first, drawn in purple
     strokeWeight(2);
     stroke(#8800ff);
     if (nodes.containsKey(sender)) {
@@ -62,7 +75,7 @@ void draw() {
       }
     }
 
-    // recipient first
+    // recipient second, drawn in green
     stroke(#00ff66);
     if (channels.containsKey(sender)) {
       PVector s = channels.get(sender).pos;
@@ -74,7 +87,7 @@ void draw() {
     }
   }
 
-  // nodes
+  // draw all nodes on top of the event lines
   fill(250);
   noStroke();
   int i = 0;
@@ -92,7 +105,7 @@ void draw() {
     }
   }
 
-  // channels
+  // channels draw all channels on top of nodes and events
   i = 0;
   for (String key : channels.keySet()) {
     Node n = channels.get(key);
@@ -118,14 +131,7 @@ void OOCSI_clients(OOCSIEvent evt) {
   }
 }
 
-//void OOCSI_connections(OOCSIEvent evt) {
-//  //println(evt.keys());
-//  //println();
-//  //println(evt.getString("channel"));
-//}
-
 void OOCSI_events(OOCSIEvent evt) {
-  //println(evt.keys());
   // method sender recipient
   events.offer(evt);
 
@@ -133,6 +139,11 @@ void OOCSI_events(OOCSIEvent evt) {
   if (!channels.containsKey(channel) && !nodes.containsKey(channel)) {
     channels.put(channel, new Node());
   }
+
+//void OOCSI_connections(OOCSIEvent evt) {
+//  println(evt.keys(), evt.getString("channel"));
+//}
+
 }
 
 class Node {
