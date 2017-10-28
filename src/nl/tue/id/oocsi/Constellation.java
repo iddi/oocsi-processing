@@ -95,6 +95,14 @@ public class Constellation {
 
 	/** VARIABLE */
 
+	public static OOCSIBoolean createBoolean() {
+		return new OOCSIBoolean(false, -1);
+	}
+
+	public static OOCSIBoolean createBoolean(Boolean referenceValue, int timeout) {
+		return new OOCSIBoolean(referenceValue, timeout);
+	}
+
 	public static OOCSIBoolean createBoolean(OOCSI oocsi, String channelName, String key) {
 		return new OOCSIBoolean(oocsi.getCommunicator(), channelName, key);
 	}
@@ -108,6 +116,14 @@ public class Constellation {
 		return new OOCSIBoolean(oocsi.getCommunicator(), channelName, key, referenceValue, timeout);
 	}
 
+	public static OOCSIInt createInt() {
+		return new OOCSIInt(0, -1);
+	}
+
+	public static OOCSIInt createInt(Integer referenceValue, int timeout) {
+		return new OOCSIInt(referenceValue, timeout);
+	}
+
 	public static OOCSIInt createInteger(OOCSI oocsi, String channelName, String key) {
 		return new OOCSIInt(oocsi.getCommunicator(), channelName, key);
 	}
@@ -119,6 +135,14 @@ public class Constellation {
 	public static OOCSIInt createInteger(OOCSI oocsi, String channelName, String key, Integer referenceValue,
 			int timeout) {
 		return new OOCSIInt(oocsi.getCommunicator(), channelName, key, referenceValue, timeout);
+	}
+
+	public static OOCSIFloat createFloat() {
+		return new OOCSIFloat(0f, -1);
+	}
+
+	public static OOCSIFloat createFloat(Float referenceValue, int timeout) {
+		return new OOCSIFloat(referenceValue, timeout);
 	}
 
 	public static OOCSIFloat createFloat(OOCSI oocsi, String channelName, String key) {
@@ -146,6 +170,14 @@ public class Constellation {
 		return new OOCSILong(oocsi.getCommunicator(), channelName, key, referenceValue, timeout);
 	}
 
+	public static OOCSILong createLong() {
+		return new OOCSILong(0, -1);
+	}
+
+	public static OOCSILong createLong(Long referenceValue, int timeout) {
+		return new OOCSILong(referenceValue, timeout);
+	}
+
 	public static OOCSIDouble createDouble(OOCSI oocsi, String channelName, String key) {
 		return new OOCSIDouble(oocsi.getCommunicator(), channelName, key);
 	}
@@ -157,6 +189,14 @@ public class Constellation {
 	public static OOCSIDouble createDouble(OOCSI oocsi, String channelName, String key, Double referenceValue,
 			int timeout) {
 		return new OOCSIDouble(oocsi.getCommunicator(), channelName, key, referenceValue, timeout);
+	}
+
+	public static OOCSIDouble createDouble() {
+		return new OOCSIDouble(0, -1);
+	}
+
+	public static OOCSIDouble createDouble(Double referenceValue, int timeout) {
+		return new OOCSIDouble(referenceValue, timeout);
 	}
 
 	public static OOCSIString createString(OOCSI oocsi, String channelName, String key) {
