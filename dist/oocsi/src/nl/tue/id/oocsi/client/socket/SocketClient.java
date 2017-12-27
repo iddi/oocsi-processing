@@ -20,7 +20,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import nl.tue.id.oocsi.client.protocol.Handler;
 import nl.tue.id.oocsi.client.protocol.MultiHandler;
@@ -53,6 +56,8 @@ public class SocketClient {
 	private boolean reconnect = false;
 	private int reconnectCountDown = 100;
 
+	private ExecutorService executor;
+
 	/**
 	 * create a new socket client with the given name
 	 * 
@@ -63,6 +68,8 @@ public class SocketClient {
 		this.name = name;
 		this.channels = channels;
 		this.services = services;
+
+		this.executor = Executors.newCachedThreadPool();
 	}
 
 	public boolean startMulticastLookup() {
@@ -140,7 +147,6 @@ public class SocketClient {
 		boolean result = false;
 		while (!disconnected && (!reconnect || reconnectCountDown-- > 0)) {
 			result = connectAttempt(hostname, port);
-
 			if (result) {
 				reconnectCountDown = 100;
 				break;
@@ -212,14 +218,12 @@ public class SocketClient {
 			connectionEstablished = true;
 
 			// subscribe to all open channels
-			if (reconnect) {
-				for (String channelName : channels.keySet()) {
-					this.internalSubscribe(channelName);
-				}
+			for (String channelName : channels.keySet()) {
+				this.internalSubscribe(channelName);
 			}
 
 			// if ok, run the communication in a different thread
-			new Thread(new SocketClientRunnable(hostname, port)).start();
+			executor.submit(new SocketClientRunnable(hostname, port));
 		}
 
 		reconnectCountDown = 0;
@@ -292,6 +296,7 @@ public class SocketClient {
 
 		output.println("quit");
 		internalDisconnect();
+		shutDown();
 	}
 
 	/**
@@ -304,6 +309,7 @@ public class SocketClient {
 
 		internalDisconnect();
 		log(" - disconnected (by kill)");
+		shutDown();
 	}
 
 	/**
@@ -322,6 +328,8 @@ public class SocketClient {
 	 * 
 	 */
 	private void internalDisconnect() {
+
+		// shutdown IO
 		try {
 			if (output != null) {
 				output.close();
@@ -336,6 +344,22 @@ public class SocketClient {
 			e.printStackTrace();
 		} catch (NullPointerException e) {
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * shutdown executor service
+	 * 
+	 */
+	private void shutDown() {
+		try {
+			executor.shutdown();
+			executor.awaitTermination(200, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+		} finally {
+			if (!executor.isTerminated()) {
+			}
+			executor.shutdownNow();
 		}
 	}
 
@@ -559,6 +583,7 @@ public class SocketClient {
 
 		try {
 			while (tempIncomingMessages.size() == 0 || start + timeout > System.currentTimeMillis()) {
+				Thread.yield();
 				Thread.sleep(50);
 			}
 			return tempIncomingMessages.size() > 0 ? tempIncomingMessages.poll() : null;
@@ -627,6 +652,8 @@ public class SocketClient {
 				internalDisconnect();
 				log(" - OOCSI disconnected "
 						+ (!connectionEstablished ? "(client name not accepted)" : "(server unavailable)"));
+
+				sleep(200);
 
 				// try reconnect
 				connect(hostname, port);
@@ -701,15 +728,19 @@ public class SocketClient {
 				final String sender, Handler c, Map<String, Object> dataMap) {
 			// try to find a responder
 			if (dataMap.containsKey(OOCSICall.MESSAGE_HANDLE)) {
-				Responder r = services.get((String) dataMap.get(OOCSICall.MESSAGE_HANDLE));
+				final Responder r = services.get((String) dataMap.get(OOCSICall.MESSAGE_HANDLE));
 				if (r != null) {
-					try {
-						r.receive(sender, Handler.parseData(data), Handler.parseTimestamp(timestamp), channel, name);
-					} catch (ClassNotFoundException e) {
-					} catch (Exception e) {
-					}
+					executor.submit(new Runnable() {
+						public void run() {
+							try {
+								r.receive(sender, Handler.parseData(data), Handler.parseTimestamp(timestamp), channel,
+										name);
+							} catch (ClassNotFoundException e) {
+							} catch (Exception e) {
+							}
+						}
+					});
 				}
-
 				return;
 			}
 
@@ -727,7 +758,6 @@ public class SocketClient {
 						break;
 					}
 				}
-
 				return;
 			}
 

@@ -116,11 +116,11 @@ public class Constellation {
 		return new OOCSIBoolean(oocsi.getCommunicator(), channelName, key, referenceValue, timeout);
 	}
 
-	public static OOCSIInt createInt() {
+	public static OOCSIInt createInteger() {
 		return new OOCSIInt(0, -1);
 	}
 
-	public static OOCSIInt createInt(Integer referenceValue, int timeout) {
+	public static OOCSIInt createInteger(Integer referenceValue, int timeout) {
 		return new OOCSIInt(referenceValue, timeout);
 	}
 

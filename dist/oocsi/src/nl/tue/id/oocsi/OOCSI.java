@@ -1,8 +1,13 @@
 package nl.tue.id.oocsi;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import nl.tue.id.oocsi.client.protocol.Handler;
 import nl.tue.id.oocsi.client.protocol.OOCSIMessage;
 import nl.tue.id.oocsi.client.services.OOCSICall;
+import nl.tue.id.oocsi.client.services.Responder;
 
 /**
  * central OOCSI connector for Processing
@@ -21,7 +26,7 @@ public class OOCSI {
 	 * @param parent
 	 */
 	public OOCSI(Object parent) {
-		init(parent, null, null, -1, false);
+		init(parent, null, null, -1, true);
 	}
 
 	/**
@@ -31,7 +36,7 @@ public class OOCSI {
 	 * @param name
 	 */
 	public OOCSI(Object parent, String name) {
-		init(parent, name, null, -1, false);
+		init(parent, name, null, -1, true);
 	}
 
 	/**
@@ -53,7 +58,7 @@ public class OOCSI {
 	 * @param hostname
 	 */
 	public OOCSI(Object parent, String name, String hostname) {
-		init(parent, name, hostname, 4444, false);
+		init(parent, name, hostname, 4444, true);
 	}
 
 	/**
@@ -77,7 +82,7 @@ public class OOCSI {
 	 * @param port
 	 */
 	public OOCSI(Object parent, String name, String hostname, int port) {
-		init(parent, name, hostname, port, false);
+		init(parent, name, hostname, port, true);
 	}
 
 	/**
@@ -94,6 +99,16 @@ public class OOCSI {
 	}
 
 	/**
+	 * create a new OOCSI network connection that is initialized with an existing communicator instance
+	 * 
+	 * @param parent
+	 * @param communicator
+	 */
+	private OOCSI(Object parent, OOCSICommunicator communicator) {
+		oocsi = communicator;
+	}
+
+	/**
 	 * create a new OOCSI network connection with client handle (<name>), server host, and port
 	 * 
 	 * @param parent
@@ -104,6 +119,97 @@ public class OOCSI {
 	 */
 	private void init(Object parent, String name, String hostname, int port, boolean reconnect) {
 		startOOCSIConnection(parent, name, hostname, port, reconnect);
+	}
+
+	/**
+	 * create a local instance of OOCSI, without a connection
+	 * 
+	 * @param parent
+	 * @return
+	 */
+	public static OOCSI localInstance(Object parent) {
+
+		// create local communicator
+		OOCSICommunicator oc = new OOCSICommunicator(parent, null) {
+
+			private static final String SELF = "SELF";
+			private List<OOCSICall> openCalls = new LinkedList<OOCSICall>();
+
+			@Override
+			public void send(String channelName, Map<String, Object> data) {
+				if (channelName != null && channelName.trim().length() > 0) {
+
+					Handler c = channels.get(channelName);
+					if (c == null && channelName.equals(name.replaceFirst(":.*", ""))) {
+						c = channels.get(SELF);
+					}
+
+					// try to find a responder
+					if (data.containsKey(OOCSICall.MESSAGE_HANDLE)) {
+						Responder r = services.get((String) data.get(OOCSICall.MESSAGE_HANDLE));
+						if (r != null) {
+							try {
+								r.receive(SELF, data, System.currentTimeMillis(), channelName, name);
+							} catch (Exception e) {
+							}
+						}
+
+						return;
+					}
+
+					// try to find an open call
+					if (!openCalls.isEmpty() && data.containsKey(OOCSICall.MESSAGE_ID)) {
+						String id = (String) data.get(OOCSICall.MESSAGE_ID);
+
+						// walk from back to allow for removal
+						for (int i = openCalls.size() - 1; i >= 0; i--) {
+							OOCSICall call = openCalls.get(i);
+							if (!call.isValid()) {
+								openCalls.remove(i);
+							} else if (call.getId().equals(id)) {
+								call.respond(data);
+								break;
+							}
+						}
+
+						return;
+					}
+
+					// if no responder or call and channel ready waiting
+					if (c != null) {
+						c.receive(SELF, data, System.currentTimeMillis(), channelName, name);
+					}
+				}
+			}
+
+			/**
+			 * register a call in the list of open calls
+			 * 
+			 * @param call
+			 */
+			public void register(OOCSICall call) {
+				openCalls.add(call);
+			}
+
+			@Override
+			public boolean isConnected() {
+				return true;
+			}
+
+			@Override
+			public void log(String message) {
+			}
+		};
+
+		// create a local instance
+		OOCSI o = new OOCSI(parent, oc) {
+			@Override
+			public void sendRaw(String channel, String data) {
+				// do nothing
+			}
+		};
+
+		return o;
 	}
 
 	/**

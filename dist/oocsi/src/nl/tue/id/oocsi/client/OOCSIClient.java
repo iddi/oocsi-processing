@@ -10,20 +10,19 @@ import nl.tue.id.oocsi.client.services.Responder;
 import nl.tue.id.oocsi.client.socket.SocketClient;
 
 /**
- * OOCSI client wrapper
+ * OOCSI client wrapper for socket client
  * 
  * @author matsfunk
  */
 public class OOCSIClient {
 
-	public static final String VERSION = "1.3.4";
-
-	private Map<String, Handler> channels = new HashMap<String, Handler>();
-	private Map<String, Responder> services = new HashMap<String, Responder>();
+	public static final String VERSION = "1.3.6";
 
 	private SocketClient sc;
-
 	protected String name;
+
+	protected Map<String, Handler> channels = new HashMap<String, Handler>();
+	protected Map<String, Responder> services = new HashMap<String, Responder>();
 
 	/**
 	 * create OOCSI client with a RANDOM name as the system-wide handle
