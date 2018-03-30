@@ -2,6 +2,7 @@ package nl.tue.id.oocsi;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import nl.tue.id.oocsi.client.OOCSIClient;
 import nl.tue.id.oocsi.client.protocol.EventHandler;
@@ -86,7 +87,7 @@ public class OOCSICommunicator extends OOCSIClient {
 	}
 
 	/**
-	 * create a call for service method <callName>
+	 * create a call for service method "callName"
 	 * 
 	 * @param callName
 	 * @return
@@ -96,7 +97,18 @@ public class OOCSICommunicator extends OOCSIClient {
 	}
 
 	/**
-	 * create a call for service method <callName>
+	 * create a call for service method "callName" on channel "channelName"
+	 * 
+	 * @param channelName
+	 * @param callName
+	 * @return
+	 */
+	public OOCSICall call(String channelName, String callName) {
+		return call(channelName, callName, 1000, 1);
+	}
+
+	/**
+	 * create a call for service method "callName" with a specific timeout
 	 * 
 	 * @param callName
 	 * @param timeoutMS
@@ -107,7 +119,19 @@ public class OOCSICommunicator extends OOCSIClient {
 	}
 
 	/**
-	 * create a call for service method <callName>
+	 * create a call for service method "callName" with a specific timeout on channel "channelName"
+	 * 
+	 * @param channelName
+	 * @param callName
+	 * @param timeoutMS
+	 * @return
+	 */
+	public OOCSICall call(String channelName, String callName, int timeoutMS) {
+		return call(channelName, callName, timeoutMS, 1);
+	}
+
+	/**
+	 * create a call for service method "callName" with a specific timeout
 	 * 
 	 * @param callName
 	 * @param timeoutMS
@@ -119,9 +143,22 @@ public class OOCSICommunicator extends OOCSIClient {
 	}
 
 	/**
-	 * subscribe to channel <channelName> for handler method <channelName> in the parent class; the handler method will
+	 * create a call for service method "callName" with a specific timeout on channel "channelName"
+	 * 
+	 * @param channelName
+	 * @param callName
+	 * @param timeoutMS
+	 * @param maxResponses
+	 * @return
+	 */
+	public OOCSICall call(String channelName, String callName, int timeoutMS, int maxResponses) {
+		return new OOCSICall(this, channelName, callName, timeoutMS, maxResponses);
+	}
+
+	/**
+	 * subscribe to channel "channelName" for handler method "channelName" in the parent class; the handler method will
 	 * be called with an OOCSIEvent object upon occurrence of an event; will try 'handleOOCSIEvent' as a fall-back in
-	 * case no matching handler method is found for <channelName>
+	 * case no matching handler method is found for "channelName"
 	 * 
 	 * @param channelName
 	 * @return
@@ -131,7 +168,7 @@ public class OOCSICommunicator extends OOCSIClient {
 	}
 
 	/**
-	 * subscribe to channel <channelName> for handler method in the parent class with the given name <handlerName>; the
+	 * subscribe to channel "channelName" for handler method in the parent class with the given name "handlerName"; the
 	 * handler method will be called with an OOCSIEvent object upon occurrence of an event
 	 * 
 	 * @param channelName
@@ -143,7 +180,7 @@ public class OOCSICommunicator extends OOCSIClient {
 	}
 
 	/**
-	 * subscribe to channel <channelName> for handler method in the parent class with the given name <handlerName>; the
+	 * subscribe to channel "channelName" for handler method in the parent class with the given name "handlerName"; the
 	 * handler method will be called with an OOCSIEvent object upon occurrence of an event
 	 * 
 	 * @param channelName
@@ -157,7 +194,7 @@ public class OOCSICommunicator extends OOCSIClient {
 	}
 
 	/**
-	 * subscribe to channel <channelName> for handler method in the parent class with the given name <handlerName>; the
+	 * subscribe to channel "channelName" for handler method in the parent class with the given name "handlerName"; the
 	 * handler method will be called with an OOCSIEvent object upon occurrence of an event
 	 * 
 	 * @param channelName
@@ -167,12 +204,19 @@ public class OOCSICommunicator extends OOCSIClient {
 	 * @param ratePerSender
 	 * @return
 	 */
-	public boolean subscribe(String channelName, String handlerName, int rate, int seconds, boolean ratePerSender) {
+	public boolean subscribe(final String channelName, String handlerName, int rate, int seconds,
+			boolean ratePerSender) {
 
 		// try event handler with OOCSIEvent parameter
 
 		try {
 			final Method handler = parent.getClass().getDeclaredMethod(handlerName, new Class[] { OOCSIEvent.class });
+			if (!Modifier.isPublic(handler.getModifiers())) {
+				log(" - [ERROR] event handler for channel " + channelName
+						+ " needs to be a public method: 'public void " + channelName + "(OOCSIEvent evt) { ... }'");
+				return false;
+			}
+
 			if (rate > 0 && seconds > 0) {
 				if (ratePerSender) {
 					subscribe(channelName, new RateLimitedClientEventHandler(rate, seconds) {
@@ -224,10 +268,13 @@ public class OOCSICommunicator extends OOCSIClient {
 					}
 				});
 			}
+
 			log(" - subscribed to " + channelName + " with event handler");
 
 			return true;
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			// not found, just return false
 			if (!name.equals(channelName)) {
 				log(" - no event handler for channel " + channelName);
@@ -270,9 +317,9 @@ public class OOCSICommunicator extends OOCSIClient {
 	}
 
 	/**
-	 * subscribe to channel <responderName> for handler method <responderName> in the parent class; the handler method
+	 * subscribe to channel "responderName" for handler method "responderName" in the parent class; the handler method
 	 * will be called with an OOCSIEvent object and a response map object upon occurrence of an event; will try
-	 * 'respondToOOCSIEvent' as a fall-back in case no matching handler method is found for <responderName>
+	 * 'respondToOOCSIEvent' as a fall-back in case no matching handler method is found for "responderName"
 	 * 
 	 * @param responderName
 	 * @return
@@ -282,7 +329,7 @@ public class OOCSICommunicator extends OOCSIClient {
 	}
 
 	/**
-	 * register a handler method in the parent class with the given name <handlerName> for the channel <channelName>;
+	 * register a handler method in the parent class with the given name "handlerName" for the channel "channelName";
 	 * the handler method will be called with an OOCSIEvent object upon occurrence of an event
 	 * 
 	 * @param responderName
@@ -313,6 +360,68 @@ public class OOCSICommunicator extends OOCSIClient {
 			};
 			responder.setCallName(responderName);
 			register(responderName, responder);
+
+			log(" - registered " + responderName + " as call responder");
+
+			return true;
+		} catch (Exception e) {
+			// not found, just return false
+			if (!name.equals(responderName)) {
+				log(" - no call responders found for channel " + responderName);
+			}
+
+			return false;
+		}
+
+	}
+
+	/**
+	 * subscribe to channel "responderName" for handler method "responderName" in the parent class; the handler method
+	 * will be called with an OOCSIEvent object and a response map object upon occurrence of an event; will try
+	 * 'respondToOOCSIEvent' as a fall-back in case no matching handler method is found for "responderName"
+	 * 
+	 * @param channelName
+	 * @param responderName
+	 * @return
+	 */
+	public boolean registerChannel(String channelName, String responderName) {
+		return registerChannel(channelName, responderName, responderName) ? true
+				: registerChannel(channelName, responderName, "respondToOOCSIEvent");
+	}
+
+	/**
+	 * register a handler method in the parent class with the given name "handlerName" for the channel "channelName";
+	 * the handler method will be called with an OOCSIEvent object upon occurrence of an event
+	 * 
+	 * @param channelName
+	 * @param responderName
+	 * @param handlerName
+	 * @return
+	 */
+	public boolean registerChannel(String channelName, String responderName, String handlerName) {
+
+		// try responder event handler with OOCSIEvent and response map parameters
+
+		try {
+			final Method handler = parent.getClass().getDeclaredMethod(handlerName,
+					new Class[] { OOCSIEvent.class, OOCSIData.class });
+			Responder responder = new Responder(this) {
+
+				@Override
+				public void respond(OOCSIEvent event, OOCSIData response) {
+					try {
+						handler.invoke(parent, new Object[] { event, response });
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+					} catch (IllegalArgumentException e) {
+						e.printStackTrace();
+					} catch (InvocationTargetException e) {
+						e.printStackTrace();
+					}
+				}
+			};
+			responder.setCallName(responderName);
+			register(channelName, responderName, responder);
 
 			log(" - registered " + responderName + " as call responder");
 

@@ -109,7 +109,7 @@ public class OOCSI {
 	}
 
 	/**
-	 * create a new OOCSI network connection with client handle (<name>), server host, and port
+	 * create a new OOCSI network connection with client handle ("name"), server host, and port
 	 * 
 	 * @param parent
 	 * @param name
@@ -222,6 +222,14 @@ public class OOCSI {
 	}
 
 	/**
+	 * disconnect this client from the OOCSI network
+	 * 
+	 */
+	public void disconnect() {
+		oocsi.disconnect();
+	}
+
+	/**
 	 * send data through a channel given by the channelName
 	 * 
 	 * @param channelName
@@ -232,7 +240,7 @@ public class OOCSI {
 	}
 
 	/**
-	 * create a call for service method <callName>
+	 * create a call for service method "callName"
 	 * 
 	 * @param callName
 	 * @return
@@ -242,7 +250,18 @@ public class OOCSI {
 	}
 
 	/**
-	 * create a call for service method <callName>
+	 * create a call for service method "callName" on channel "channelName"
+	 * 
+	 * @param channelName
+	 * @param callName
+	 * @return
+	 */
+	public OOCSICall call(String channelName, String callName) {
+		return oocsi.call(channelName, callName);
+	}
+
+	/**
+	 * create a call for service method "callName" with a specific timeout
 	 * 
 	 * @param callName
 	 * @param timeoutMS
@@ -253,7 +272,19 @@ public class OOCSI {
 	}
 
 	/**
-	 * create a call for service method <callName>
+	 * create a call for service method "callName" with a specific timeout on channel "channelName"
+	 * 
+	 * @param channelName
+	 * @param callName
+	 * @param timeoutMS
+	 * @return
+	 */
+	public OOCSICall call(String channelName, String callName, int timeoutMS) {
+		return oocsi.call(channelName, callName, timeoutMS);
+	}
+
+	/**
+	 * create a call for service method "callName" with a specific timeout
 	 * 
 	 * @param callName
 	 * @param timeoutMS
@@ -262,6 +293,19 @@ public class OOCSI {
 	 */
 	public OOCSICall call(String callName, int timeoutMS, int maxResponses) {
 		return oocsi.call(callName, timeoutMS, maxResponses);
+	}
+
+	/**
+	 * create a call for service method "callName" with a specific timeout on channel "channelName"
+	 * 
+	 * @param channelName
+	 * @param callName
+	 * @param timeoutMS
+	 * @param maxResponses
+	 * @return
+	 */
+	public OOCSICall call(String channelName, String callName, int timeoutMS, int maxResponses) {
+		return oocsi.call(channelName, callName, timeoutMS, maxResponses);
 	}
 
 	/**
@@ -289,7 +333,7 @@ public class OOCSI {
 	}
 
 	/**
-	 * subscribe to a channel with a given handler method name <handlerName>
+	 * subscribe to a channel with a given handler method name "handlerName"
 	 * 
 	 * @param channelName
 	 * @param handlerName
@@ -304,8 +348,8 @@ public class OOCSI {
 	}
 
 	/**
-	 * subscribe to a channel with a given handler method name <handlerName>; limits the rate of incoming events to
-	 * <rate> events per <seconds> secs
+	 * subscribe to a channel with a given handler method name "handlerName"; limits the rate of incoming events to
+	 * "rate" events per "seconds" secs
 	 * 
 	 * @param channelName
 	 * @param handlerName
@@ -322,8 +366,8 @@ public class OOCSI {
 	}
 
 	/**
-	 * subscribe to a channel with a given handler method name <handlerName>; limits the rate of incoming events to
-	 * <rate> events per <seconds> secs; <ratePerSender> controls whether we limit the rate of incoming event per sender
+	 * subscribe to a channel with a given handler method name "handlerName"; limits the rate of incoming events to
+	 * "rate" events per "seconds" secs; "ratePerSender" controls whether we limit the rate of incoming event per sender
 	 * or for all events coming in from all senders
 	 * 
 	 * @param channelName
@@ -356,7 +400,8 @@ public class OOCSI {
 	}
 
 	/**
-	 * register a responder; requires a method with the given responderName with parameters (OOCSIEvent, OOCSIData)
+	 * register a responder "responderName"; requires a method with the given name "responderName" with parameters
+	 * (OOCSIEvent, OOCSIData)
 	 * 
 	 * @param responderName
 	 * @param responderFunctionName
@@ -368,6 +413,39 @@ public class OOCSI {
 		}
 
 		oocsi.register(responderName, responderFunctionName);
+	}
+
+	/**
+	 * register a responder "responderName" on channel "channelName"; requires a method with the responder name
+	 * "responderName" with parameters (OOCSIEvent, OOCSIData)
+	 * 
+	 * @param channelName
+	 * @param responderName
+	 */
+	public void registerChannel(String channelName, String responderName) {
+
+		if (!oocsi.isConnected()) {
+			return;
+		}
+
+		oocsi.registerChannel(channelName, responderName);
+	}
+
+	/**
+	 * register a responder "responderName" on channel "channelName"; requires a method with the given name
+	 * "responderName" with parameters (OOCSIEvent, OOCSIData)
+	 * 
+	 * @param channelName
+	 * @param responderName
+	 * @param responderFunctionName
+	 */
+	public void registerChannel(String channelName, String responderName, String responderFunctionName) {
+
+		if (!oocsi.isConnected()) {
+			return;
+		}
+
+		oocsi.registerChannel(channelName, responderName, responderFunctionName);
 	}
 
 	/**
