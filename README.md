@@ -25,24 +25,23 @@ Either use one of the examples from the Processing examples browser, or follow t
 
 Before starting with an OOCSI client running in Processing, you need to know how the OOCSI network looks like.
 You will need an OOCSI server running either on your computer (_localhost_) or available from the network.
-Also, any OOCSI client in the network is identified by a _unique name_, which serves also as an address if other clients in the OOCSI network want to messages. 
+Also, any OOCSI client in the network is identified by a _unique_name_, which serves also as an address if other clients in the OOCSI network want to messages. 
 
 
 ### Create an OOCSI client
 
 Before you can send or receive messages, you will need to create an OOCSI client that connects to an OOCSI server (running at a specific address).
-When creating the client, you will need to supply also a _unique name_, which can be used as a handle if others want to send messages to your client. 
+When creating the client, you will need to supply also a _unique_name_, which can be used as a handle if others want to send messages to your client. 
 
 Create a client that connects to an OOCSI server running on the local computer (running at _localhost_, see [here](https://https://github.com/iddi/oocsi/readme.md#running_local)):
 
-	OOCSI oocsi = new OOCSI(this, "unique name", "localhost");    
+	OOCSI oocsi = new OOCSI(this, "unique_name", "localhost");    
 
 Create a client that connects to an OOCSI server running at the address _oocsi.example.net_:
 
-	OOCSI oocsi = new OOCSI(this, "unique name", "oocsi.example.net");
+	OOCSI oocsi = new OOCSI(this, "unique_name", "oocsi.example.net");
 
-After this statement, the OOCSI client _oocsi_ can be used in Processing code to send or subscribe for messages.
-Please keep an eye on the Processing console where OOCSI will print start messages and also error, in case something goes wrong. 
+After this statement, the OOCSI client _oocsi_ can be used in Processing code to send or subscribe for messages. Please keep an eye on the Processing console where OOCSI will print start messages and also error, in case something goes wrong. 
 
 
 ### Subscribe to OOCSI channel
@@ -51,9 +50,9 @@ OOCSI communications base on messages which are sent to channels or individual c
 OOCSI clients like the one created above can subscribe to channels, and from then on will receive all messages that are sent to the chosen channels.
 Also, clients will receive all messages that are sent to their specific channel.
 
-	oocsi.subscribe("channel red"); 
+	oocsi.subscribe("channel_red"); 
 
-This line will subscribe the client to the channel _channel red_. The client will receive all messages sent to that channel.
+This line will subscribe the client to the channel _channel_red_. The client will receive all messages sent to that channel.
 To actually receive something, the _handleOOCSIEvent_ function has to be in place: 
 
 	void handleOOCSIEvent(OOCSIEvent message) {
@@ -68,9 +67,7 @@ In this example, all contents of a message are printed to the Processing console
 		println(message.get("intensity"));
 	}
 	
-Instead of using "handleOOCSIEvent" as the default hub of all incoming OOCSI events, 
-you can create a new function with the same name as the channel you would like to subscribe to, 
-and then this function will be called for incoming evens from that channel:
+Instead of using "handleOOCSIEvent" as the default hub of all incoming OOCSI events, you can create a new function with the same name as the channel you would like to subscribe to, and then this function will be called for incoming evens from that channel:
 
 	...
 	
@@ -90,15 +87,15 @@ Note that for this only channel names without punctuation and whitespace charact
 
 Sending data to the OOCSI network, for instance, to one specific channel or client is even easier: 
 
-	oocsi.channel("channel red").data("intensity", 100).send();
+	oocsi.channel("channel_red").data("intensity", 100).send();
  
 Essentially, sending messages follows three steps: 
 
-1. Select a channel, for example: "channel red"
+1. Select a channel, for example: "channel_red"
 2. Add data to the message, for example: "intensity" = 100
 3. Send the message to OOCSI
  
-This composed message will then be send via the connected OOCSI server to the respective channel or client, in this case to "channel red". 
+This composed message will then be send via the connected OOCSI server to the respective channel or client, in this case to "channel_red". 
 
 
 ### Getting data from events
@@ -117,15 +114,13 @@ Each of these fields can be access with a dedicated getter method:
 	Date timestamp = event.getTimestamp();
 	long unixTime = event.getTime();
 	
-Apart from that, OOCSIEvents have a data payload that is freely definable and realized as a key-value store (Map<String, Object>). Such key-value pairs can be accessed with helper mthods
-that will convert the data type of hte value accordingly: 
+Apart from that, OOCSIEvents have a data payload that is freely definable and realized as a key-value store (Map<String, Object>). Such key-value pairs can be accessed with helper mthods that will convert the data type of hte value accordingly: 
 	 
 	OOCSI event = ...
 	String stringValue = event.getString("mykey");
 	Object objectValue = event.getObject("mykey");
 	
-Events do not guarantee that specific keys and values are contained. For these cases, default values can be used in the retrieval of event data. These default values (with the correct data type) are 
-added to the retrieval call as a second parameter, and they will be assigned if (1) the key could not be found, or (2) if the value could not converted to the specified data type.  	
+Events do not guarantee that specific keys and values are contained. For these cases, default values can be used in the retrieval of event data. These default values (with the correct data type) are added to the retrieval call as a second parameter, and they will be assigned if (1) the key could not be found, or (2) if the value could not converted to the specified data type.  	
 
 	// retrieval with an additional default value
 	OOCSI event = ...
@@ -151,9 +146,7 @@ Finally, events can provide a list of contained keys, which can be used to dump 
 ### Full example
 
 As a full example, we build a simple counter that will count from 0 up till the sketch is stopped.
-In the _setup_ function, a connection to the OOCSI network is established with the handle "counterA", and after that,
-an initial message with counter = 0 is sent to "counterA" via the OOCSI network. In the _handleOOCSIEvent_ function,
-every time a message with a counter value is received, the sketch will send it out to handle "counterA" again with the counter increased by 1.
+In the _setup_ function, a connection to the OOCSI network is established with the handle "counterA", and after that, an initial message with counter = 0 is sent to "counterA" via the OOCSI network. In the _handleOOCSIEvent_ function, every time a message with a counter value is received, the sketch will send it out to handle "counterA" again with the counter increased by 1.
 When pasting the following code into Processing and running it, the Processing console should show a fast sequence of increasing numbers.
 
 	import nl.tue.id.oocsi.*;
@@ -175,19 +168,19 @@ When pasting the following code into Processing and running it, the Processing c
 ### Other examples 
 
 The OOCSI Processing plugin comes with 3 examples that demonstrate parts of the functionality.
-All examples require an OOCSI server running on the same computer (running at _localhost_, see [here](https://https://github.com/iddi/oocsi/readme.md#running_local)).
+All examples require an OOCSI server running on the same computer (running at _localhost_, see [here](https://github.com/iddi/oocsi/readme.md#running_local)).
 The examples are available from the Processing examples browser, or below:
 
 1. Client to client message sending _via a direct link_:
-	- [DirectReceiver](dist/oocsi/examples/DirectReceiver/DirectReceiver.pde) (start this first)
-	- [DirectSender](dist/oocsi/examples/DirectSender/DirectSender.pde) (move mouse over the window, receiver window should show a moving square)
+	- [DirectReceiver](dist/oocsi/examples/Data/DirectReceiver/DirectReceiver.pde) (start this first)
+	- [DirectSender](dist/oocsi/examples/Data/DirectSender/DirectSender.pde) (move mouse over the window, receiver window should show a moving square)
 
 
 2. Client to client message sending and receiving _via a channel_:
-	- [ChannelReceiver](dist/oocsi/examples/ChannelReceiver/ChannelReceiver.pde) (start this first)
-	- [ChannelSender](dist/oocsi/examples/ChannelSender/ChannelSender.pde) (move mouse over the window, receiver window should show a moving square)
+	- [ChannelReceiver](dist/oocsi/examples/Data/ChannelReceiver/ChannelReceiver.pde) (start this first)
+	- [ChannelSender](dist/oocsi/examples/Data/ChannelSender/ChannelSender.pde) (move mouse over the window, receiver window should show a moving square)
 
 
 3. Getting an updated list of all connected clients
-	- [Tools_ClientLister](dist/oocsi/examples/Tools_ClientLister/Tools_ClientLister.pde)
+	- [Tools_ClientLister](dist/oocsi/examples/Tools/ClientLister/Tools/ClientLister.pde)
 	
