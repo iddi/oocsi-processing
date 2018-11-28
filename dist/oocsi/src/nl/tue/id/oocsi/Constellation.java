@@ -77,6 +77,11 @@ public class Constellation {
 		return new OOCSISpread(oocsi.getCommunicator(), channelName, key, timeout);
 	}
 
+	public static OOCSISpread createSpread(OOCSI oocsi, String channelName, String key, int timeout,
+			String handlerName) {
+		return new OOCSISpread(oocsi.getCommunicator(), channelName, key, timeout, oocsi.getHandlerFor(handlerName));
+	}
+
 	/** SYNC */
 
 	public static OOCSISync createSync(OOCSI oocsi, String channelName, int timeout, String handlerName) {

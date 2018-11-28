@@ -272,9 +272,7 @@ public class OOCSICommunicator extends OOCSIClient {
 			log(" - subscribed to " + channelName + " with event handler");
 
 			return true;
-		} catch (
-
-		Exception e) {
+		} catch (Exception e) {
 			// not found, just return false
 			if (!name.equals(channelName)) {
 				log(" - no event handler for channel " + channelName);
