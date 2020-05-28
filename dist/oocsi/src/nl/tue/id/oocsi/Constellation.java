@@ -71,6 +71,12 @@ public class Constellation {
 		return new OOCSIGather<Integer>(oocsi.getCommunicator(), channelName, key, timeout);
 	}
 
+	public static OOCSIGather<Integer> createIntegerGather(OOCSI oocsi, String channelName, String key, int timeout,
+			String handlerName) {
+		return new OOCSIGather<Integer>(oocsi.getCommunicator(), channelName, key, timeout,
+				oocsi.getHandlerFor(handlerName));
+	}
+
 	/** SPREAD */
 
 	public static OOCSISpread createSpread(OOCSI oocsi, String channelName, String key, int timeout) {

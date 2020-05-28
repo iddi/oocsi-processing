@@ -192,7 +192,8 @@ public class OOCSIEvent {
 	 * @return
 	 */
 	public String getString(String key) {
-		return this.data.get(key).toString();
+		Object result = this.data.get(key);
+		return result != null ? result.toString() : null;
 	}
 
 	/**
@@ -279,5 +280,24 @@ public class OOCSIEvent {
 	 */
 	public long getTime() {
 		return timestamp.getTime();
+	}
+
+	/**
+	 * get a String representation of this event
+	 * 
+	 */
+	@Override
+	public String toString() {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("Sender: " + getSender());
+		sb.append("Recipient: " + getRecipient() + ", ");
+		sb.append("Timestamp: " + getTimestamp() + ", ");
+		sb.append("\n");
+		for (String key : keys()) {
+			sb.append(key + ": " + getString(key) + ", ");
+		}
+		sb.append("\n");
+		return sb.toString();
 	}
 }

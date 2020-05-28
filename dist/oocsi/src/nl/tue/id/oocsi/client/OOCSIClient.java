@@ -127,6 +127,16 @@ public class OOCSIClient {
 	}
 
 	/**
+	 * retrieve whether we are still trying to reconnect, or whether we have given up on this connection (server,
+	 * handle, etc.)
+	 * 
+	 * @return
+	 */
+	public boolean isReconnect() {
+		return sc.isReconnect();
+	}
+
+	/**
 	 * set whether or not a reconnection attempt should be made if a connection fails
 	 * 
 	 * @param reconnect
@@ -179,6 +189,7 @@ public class OOCSIClient {
 	 * @param responder
 	 */
 	public void register(String callName, Responder responder) {
+		responder.setOocsi(this);
 		responder.setCallName(callName);
 		sc.subscribe(callName, responder);
 		sc.register(callName, responder);
@@ -192,9 +203,31 @@ public class OOCSIClient {
 	 * @param responder
 	 */
 	public void register(String channelName, String callName, Responder responder) {
+		responder.setOocsi(this);
 		responder.setCallName(callName);
 		sc.subscribe(channelName, responder);
 		sc.register(callName, responder);
+	}
+
+	/**
+	 * unregister a responder with the socket client with a given handle "callName"
+	 * 
+	 * @param callName
+	 */
+	public void unregister(String callName) {
+		sc.unsubscribe(callName);
+		sc.unregister(callName);
+	}
+
+	/**
+	 * unregister a responder with the socket client with a given handle "callName" on channel "channelName"
+	 * 
+	 * @param channelName
+	 * @param callName
+	 */
+	public void unregister(String channelName, String callName) {
+		sc.unsubscribe(channelName);
+		sc.unregister(callName);
 	}
 
 	/**
