@@ -16,7 +16,7 @@ void setup() {
   background(120);
   frameRate(10);
 
-  // connect ot OOCSI server running on the same machine (localhost)
+  // connect to OOCSI server running on the same machine (localhost)
   // with "senderName" to be my channel others can send data to
   // (for more information how to run an OOCSI server refer to: https://iddi.github.io/oocsi/)
   oocsi = new OOCSI(this, "senderName", "localhost");

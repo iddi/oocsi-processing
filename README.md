@@ -35,11 +35,15 @@ When creating the client, you will need to supply also a _unique_name_, which ca
 
 Create a client that connects to an OOCSI server running on the local computer (running at _localhost_, see [here](https://https://github.com/iddi/oocsi/readme.md#running_local)):
 
-	OOCSI oocsi = new OOCSI(this, "unique_name", "localhost");    
+````Java
+	OOCSI oocsi = new OOCSI(this, "unique_name", "localhost");
+````
 
 Create a client that connects to an OOCSI server running at the address _oocsi.example.net_:
 
+````Java
 	OOCSI oocsi = new OOCSI(this, "unique_name", "oocsi.example.net");
+````
 
 After this statement, the OOCSI client _oocsi_ can be used in Processing code to send or subscribe for messages. Please keep an eye on the Processing console where OOCSI will print start messages and also error, in case something goes wrong. 
 
@@ -50,36 +54,42 @@ OOCSI communications base on messages which are sent to channels or individual c
 OOCSI clients like the one created above can subscribe to channels, and from then on will receive all messages that are sent to the chosen channels.
 Also, clients will receive all messages that are sent to their specific channel.
 
+````Java
 	oocsi.subscribe("channel_red"); 
+````
 
 This line will subscribe the client to the channel _channel_red_. The client will receive all messages sent to that channel.
 To actually receive something, the _handleOOCSIEvent_ function has to be in place: 
 
+````Java
 	void handleOOCSIEvent(OOCSIEvent message) {
 		// print out all values in message
 		println(message.keys());
 	}
-	
+````
+
 In this example, all contents of a message are printed to the Processing console. These _keys_ can be used to retrieve values from the message, for example:
 
+````Java
 	void handleOOCSIEvent(OOCSIEvent message) {
 		// print out the "intensity" value in the message
 		println(message.get("intensity"));
 	}
-	
+````
+
 Instead of using "handleOOCSIEvent" as the default hub of all incoming OOCSI events, you can create a new function with the same name as the channel you would like to subscribe to, and then this function will be called for incoming evens from that channel:
 
+````Java
 	...
-	
 	oocsi.subscribe("testchannel");
-	
 	...
 
 	void testchannel(OOCSIEvent message) {
 		// print out the "intensity" value in the message from channel "testchannel"
 		println(message.get("intensity"));
 	}
-	
+````
+
 Note that for this only channel names without punctuation and whitespace characters are possible.
 	
 
@@ -87,7 +97,9 @@ Note that for this only channel names without punctuation and whitespace charact
 
 Sending data to the OOCSI network, for instance, to one specific channel or client is even easier: 
 
+````Java
 	oocsi.channel("channel_red").data("intensity", 100).send();
+````
  
 Essentially, sending messages follows three steps: 
 
@@ -100,47 +112,92 @@ This composed message will then be send via the connected OOCSI server to the re
 
 ### Getting data from events
 
-An OOCSIEvent has built-in infrastructure-level data fields such as _sender_, _timestamp_, and _channel_. In addition, the _recipient_ field is provided for some client implementations.
-Each of these fields can be access with a dedicated getter method:
+Events in the OOCSI system contain both data and meta-data items that are sent from one client to another client or to a channel (with multiple subscribers).
 
-	OOCSI event = ...
-	
+#### Event data: general items
+
+OOCSIEvents have a data payload that is freely definable and realized as a key-value store (Map<String, Object>). Such key-value pairs can be accessed with helper mthods that will convert the data type of the value accordingly: 
+
+````Java
+	// from a given OOCSIEvent event
+	String stringValue = event.getString("mykey");
+	Object objectValue = event.getObject("mykey");
+````
+
+Events do not guarantee that specific keys and values are contained. For these cases, default values can be used in the retrieval of event data. These default values (with the correct data type) are added to the retrieval call as a second parameter, and they will be assigned if (1) the key could not be found, or (2) if the value could not converted to the specified data type.  	
+
+````Java
+	// retrieval with an additional default value
+	// from a given OOCSIEvent event
+	boolean booleanValue = event.getInt("mykey", false);
+	int intValue = event.getInt("mykey", 0);
+	long longValue = event.getLong("mykey", 0);
+	float floatValue = event.getFloat("mykey", 0.0f);
+	double doubleValue = event.getDouble("mykey", 0.0d);
+	String stringValue = event.getString("mykey", "default");
+````
+
+#### Event data: array items
+
+The same works for arrays (fields of values of the same type). You can retrieve them by adding "Array" to the retrieval method. The default value is always an array of the same type. If you don't need a default value, you can use `null`.
+
+````Java
+	// retrieval without default array value
+	boolean[] booleanArray = event.getIntArray("mykey", null);
+	int[] intArray = event.getIntArray("mykey", null);
+	long[] longArray = event.getLongArray("mykey", null);
+	float[] floatArray = event.getFloatArray("mykey", null);
+	double[] doubleArray = event.getDoubleArray("mykey", null);
+	String[] stringArray = event.getStringArray("mykey", null);
+````
+
+If you want to retrieve the data with a default value, you need to use an array of the same type as what you want to get out. Arrays of specific types can be created as `new String[] {"hello", "world"}` for the type `String`, or `new int[] { 1, 2, 3 }` for the type `int`. They can be empty as well: `new long[]{}` or `new boolean[]{}`.
+
+````Java
+	// retrieval with an additional default array value
+	boolean[] booleanArray = event.getBooleanArray("mykey", new boolean[] {true, false, true, false });
+	int[] intArray = event.getIntArray("mykey", new int[] { 1, 2, 3 });
+	long[] longArray = event.getLongArray("mykey", new long[]{ 100000l, 200000l });
+	float[] floatArray = event.getFloatArray("mykey", new float[]{ 1.30l, 20.3l });
+	double[] doubleArray = event.getDoubleArray("mykey", new double[]{ 100000l, 200000l });
+	String[] stringArray = event.getStringArray("mykey", new String[] {});
+````
+
+#### Event data: check availability of items
+
+As an alternative to using default values, one can also check whether the key is contained in the event:
+
+````Java
+	// with a given OOCSIEvent event
+	if(event.has("mykey")) {
+		// retrieve value (String, for example)
+		event.getString("mykey", "");
+	}
+````
+
+Events can provide a list of contained keys, which can be used to dump all contained data or to systematically retrieve all data.
+
+````Java
+	// from a given OOCSIEvent event
+	String[] keys = event.keys();
+````
+
+
+#### Event meta-data
+
+Apart from that, an OOCSIEvent has built-in meta-data fields such as _sender_, _timestamp_, and _channel_. In addition, the _recipient_ field is provided for some client implementations. Each of these fields can be access with a dedicated getter method:
+
+````Java
+	// from a given OOCSIEvent event	
 	// sender and receiver
 	String sender = event.getSender();
 	String channel = event.getChannel();
-	String channel = event.getRecipient();
+	String recipient = event.getRecipient();
 	
 	// time
 	Date timestamp = event.getTimestamp();
 	long unixTime = event.getTime();
-	
-Apart from that, OOCSIEvents have a data payload that is freely definable and realized as a key-value store (Map<String, Object>). Such key-value pairs can be accessed with helper mthods that will convert the data type of hte value accordingly: 
-	 
-	OOCSI event = ...
-	String stringValue = event.getString("mykey");
-	Object objectValue = event.getObject("mykey");
-	
-Events do not guarantee that specific keys and values are contained. For these cases, default values can be used in the retrieval of event data. These default values (with the correct data type) are added to the retrieval call as a second parameter, and they will be assigned if (1) the key could not be found, or (2) if the value could not converted to the specified data type.  	
-
-	// retrieval with an additional default value
-	OOCSI event = ...
-	String stringValue = event.getString("mykey", "default");
-	long longValue = event.getLong("mykey", 0);
-	int intValue = event.getInt("mykey", 0);
-	boolean booleanValue = event.getInt("mykey", false);
-
-As an alternative to using default values, one can also check whether the key is contained in the event:
-
-	OOCSI event = ...
-	if(event.has("mykey")) {
-		// retrieve value
-	}
-	
-Finally, events can provide a list of contained keys, which can be used to dump all contained data or to systematically retrieve all data.
-
-	OOCSI event = ...
-	String[] keys = event.keys();
-
+````
 
 
 ### Full example
@@ -149,6 +206,7 @@ As a full example, we build a simple counter that will count from 0 up till the 
 In the _setup_ function, a connection to the OOCSI network is established with the handle "counterA", and after that, an initial message with counter = 0 is sent to "counterA" via the OOCSI network. In the _handleOOCSIEvent_ function, every time a message with a counter value is received, the sketch will send it out to handle "counterA" again with the counter increased by 1.
 When pasting the following code into Processing and running it, the Processing console should show a fast sequence of increasing numbers.
 
+````Java
 	import nl.tue.id.oocsi.*;
 	
 	OOCSI oocsi;
@@ -163,6 +221,7 @@ When pasting the following code into Processing and running it, the Processing c
 	  println(count);
 	  oocsi.channel("counterA").data("count", count + 1).send();
 	}
+````
 
 
 ### Other examples 

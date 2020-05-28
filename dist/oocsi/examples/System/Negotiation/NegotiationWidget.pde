@@ -22,7 +22,7 @@ public class NegotiationWidget {
     this.width = width;
     this.height = height;
 
-    // connect ot OOCSI server running on the same machine (localhost)
+    // connect to OOCSI server running on the same machine (localhost)
     // with a unique handle which will be the channel others can send data to
     // (for more information how to run an OOCSI server refer to: https://iddi.github.io/oocsi/)
     oocsi = new OOCSI(this, "brightness_" + System.currentTimeMillis(), "oocsi.id.tue.nl");

@@ -20,7 +20,8 @@ void setup() {
   // (for more information how to run an OOCSI server refer to: https://iddi.github.io/oocsi/)
   OOCSI oocsi = new OOCSI(this, "filter_test_client", "localhost");
 
-  // subscribe to channel "testchannel"
+  // subscribe to channel "testchannel" with a filter on the event 
+  // attribute 'position': position needs to be larger than 120 to receive the event
   oocsi.subscribe("testchannel[filter(position<120)]", "testfilter");
 }
 

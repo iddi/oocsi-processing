@@ -33,7 +33,6 @@ void setup() {
   textSize(10f);
 
   // connect to OOCSI server running on the same machine (localhost)
-  // with "receiverName" to be my channel others can send data to
   // (for more information how to run an OOCSI server refer to: https://iddi.github.io/oocsi/)
   OOCSI oocsi = new OOCSI(this, "receiver_" + System.currentTimeMillis(), "localhost");
 
@@ -76,8 +75,8 @@ void datachannel(OOCSIEvent event) {
   // get and save string value
   numberString = event.getString("string");
 
-  // get, cast and save array value
-  numberArray = (float[]) event.getObject("array");
+  // get and save array value (default is array with two 0 values)
+  numberArray = event.getFloatArray("array", new float[] { 0, 0 });
 
   // get, cast and save Date object value
   dateObject = (Date) event.getObject("object");
