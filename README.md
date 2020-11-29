@@ -6,14 +6,13 @@ This platform can connect Windows, Mac and Linux computers (running Java and Pro
 Web brosers (via websockets) and mobile devices (iOS and Android).
 Please refer to the general documentation to know more about connection possibilities.  
 
-## Download
+## Easy installation
 
-Find the latest version of the library here: [oocsi-processing.zip](dist/oocsi-processing.zip) (21kB)
+Open Processing and the Processing library manager, wait until it has refreshed, then search for "OOCSI". Click to install or update. Done.
 
-Alternatively, you can browse the source code on GitHub or clone the GitHub repository and get started with the code.
+## Manual installation
 
-## Installation
-
+Alternatively, you can check out the source code here on GitHub or donwload the bundle from the [releases](https://github.com/iddi/oocsi-processing/releases) page. Then:
 1. Extract the zip file into the Processing libraries directory (in Windows processing-x.x.x\modes\java\libraries\)
 2. Restart Processing
 3. Open the examples browser in Processing, look for the Libraries >> oocsi folder 
