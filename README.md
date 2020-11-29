@@ -175,6 +175,18 @@ As an alternative to using default values, one can also check whether the key is
 	}
 ````
 
+If you assign new values to a local variable, you can also use the local variable as the default value:
+
+````Java
+	// somewhere in your program, as a global variable:
+	int intensity = 0;
+
+	// with a given OOCSIEvent event...
+	// update the intensity variable with the value from the event
+	//(if it does not exist, you just use the variable as default value)
+	intensity = event.getInt("intensity", intensity);
+````
+
 Events can provide a list of contained keys, which can be used to dump all contained data or to systematically retrieve all data.
 
 ````Java
