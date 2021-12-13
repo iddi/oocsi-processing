@@ -128,7 +128,7 @@ Events do not guarantee that specific keys and values are contained. For these c
 ````Java
 	// retrieval with an additional default value
 	// from a given OOCSIEvent event
-	boolean booleanValue = event.getInt("mykey", false);
+	boolean booleanValue = event.getBoolean("mykey", false);
 	int intValue = event.getInt("mykey", 0);
 	long longValue = event.getLong("mykey", 0);
 	float floatValue = event.getFloat("mykey", 0.0f);
@@ -142,7 +142,7 @@ The same works for arrays (fields of values of the same type). You can retrieve 
 
 ````Java
 	// retrieval without default array value
-	boolean[] booleanArray = event.getIntArray("mykey", null);
+	boolean[] booleanArray = event.getBooleanArray("mykey", null);
 	int[] intArray = event.getIntArray("mykey", null);
 	long[] longArray = event.getLongArray("mykey", null);
 	float[] floatArray = event.getFloatArray("mykey", null);
