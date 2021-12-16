@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import nl.tue.id.oocsi.client.data.OOCSIDevice;
 import nl.tue.id.oocsi.client.protocol.Handler;
 import nl.tue.id.oocsi.client.protocol.OOCSIMessage;
 import nl.tue.id.oocsi.client.services.OOCSICall;
@@ -446,6 +447,26 @@ public class OOCSI {
 		}
 
 		oocsi.registerChannel(channelName, responderName, responderFunctionName);
+	}
+
+	/**
+	 * create an OOCSI device instance with the client's name that can be configured and then submitted to the OOCSI
+	 * server
+	 * 
+	 * @return
+	 */
+	public OOCSIDevice heyOOCSI() {
+		return oocsi.heyOOCSI();
+	}
+
+	/**
+	 * create a named OOCSI device that can be configured and then submitted to the OOCSI server
+	 * 
+	 * @param deviceName
+	 * @return
+	 */
+	public OOCSIDevice heyOOCSI(String deviceName) {
+		return oocsi.heyOOCSI(deviceName);
 	}
 
 	/**

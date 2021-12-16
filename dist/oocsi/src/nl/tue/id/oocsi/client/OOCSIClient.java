@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import nl.tue.id.oocsi.client.data.OOCSIDevice;
 import nl.tue.id.oocsi.client.protocol.Handler;
 import nl.tue.id.oocsi.client.services.OOCSICall;
 import nl.tue.id.oocsi.client.services.Responder;
@@ -16,9 +17,9 @@ import nl.tue.id.oocsi.client.socket.SocketClient;
  */
 public class OOCSIClient {
 
-	public static final String VERSION = "1.3.9";
+	public static final String VERSION = "1.4.2";
 
-	private SocketClient sc;
+	protected SocketClient sc;
 	protected String name;
 
 	protected Map<String, Handler> channels = new HashMap<String, Handler>();
@@ -252,6 +253,26 @@ public class OOCSIClient {
 		if (channelName != null && channelName.trim().length() > 0) {
 			sc.send(channelName, data);
 		}
+	}
+
+	/**
+	 * create an OOCSI device instance with the client's name that can be configured and then submitted to the OOCSI
+	 * server
+	 * 
+	 * @return
+	 */
+	public OOCSIDevice heyOOCSI() {
+		return new OOCSIDevice(this, this.name);
+	}
+
+	/**
+	 * create a named OOCSI device that can be configured and then submitted to the OOCSI server
+	 * 
+	 * @param deviceName
+	 * @return
+	 */
+	public OOCSIDevice heyOOCSI(String deviceName) {
+		return new OOCSIDevice(this, deviceName);
 	}
 
 	/**
