@@ -14,6 +14,7 @@ import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -272,6 +273,47 @@ public class DFDataset {
 				rawMap.entrySet().stream().forEach(e -> {
 					result.put(e.getKey().toString(), e.getValue());
 				});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	/**
+	 * get all entries from an entity dataset
+	 * 
+	 * @return
+	 */
+	public synchronized List<Map<String, Object>> all() {
+		List<Map<String, Object>> result = new LinkedList<Map<String, Object>>();
+
+		try {
+			URL url = new URL(protocol + server + "/datasets/entity/" + dataset + "/items");
+			HttpURLConnection http = (HttpURLConnection) url.openConnection();
+			http.setRequestMethod("GET");
+
+			http.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+			http.setRequestProperty("api_token", access_token);
+			http.connect();
+			InputStream inputStream = http.getInputStream();
+			String text = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).lines()
+			        .collect(Collectors.joining("\n"));
+
+			Object objList = new JSONReader().read(text);
+			if (objList instanceof List) {
+				List<?> list = (List<?>) objList;
+				for (Object obj : list) {
+					if (obj instanceof Map) {
+						Map<String, Object> newMap = new HashMap<>();
+						Map<?, ?> rawMap = (Map<?, ?>) obj;
+						rawMap.entrySet().stream().forEach(e -> {
+							newMap.put(e.getKey().toString(), e.getValue());
+						});
+						result.add(newMap);
+					}
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
