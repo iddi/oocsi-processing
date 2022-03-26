@@ -1,0 +1,9 @@
+nl.tue.id.datafoundry
+nl.tue.id.oocsi
+nl.tue.id.oocsi.client
+nl.tue.id.oocsi.client.behavior
+nl.tue.id.oocsi.client.behavior.state
+nl.tue.id.oocsi.client.data
+nl.tue.id.oocsi.client.protocol
+nl.tue.id.oocsi.client.services
+nl.tue.id.oocsi.client.socket

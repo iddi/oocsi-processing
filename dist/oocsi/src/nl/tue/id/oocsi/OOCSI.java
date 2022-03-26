@@ -123,6 +123,15 @@ public class OOCSI {
 	}
 
 	/**
+	 * return client handle
+	 * 
+	 * @return
+	 */
+	public String getName() {
+		return oocsi.getName();
+	}
+
+	/**
 	 * create a local instance of OOCSI, without a connection
 	 * 
 	 * @param parent
