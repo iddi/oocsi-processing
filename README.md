@@ -233,24 +233,3 @@ When pasting the following code into Processing and running it, the Processing c
 	  oocsi.channel("counterA").data("count", count + 1).send();
 	}
 ````
-
-
-### Other examples 
-
-The OOCSI Processing plugin comes with 3 examples that demonstrate parts of the functionality.
-All examples require an OOCSI server running on the same computer (running at _localhost_, see [here](https://github.com/iddi/oocsi/readme.md#running_local)).
-The examples are available from the Processing examples browser, or below:
-
-1. Client to client message sending _via a direct link_:
-	- [DirectReceiver](dist/oocsi/examples/Data/DirectReceiver/DirectReceiver.pde) (start this first)
-	- [DirectSender](dist/oocsi/examples/Data/DirectSender/DirectSender.pde) (move mouse over the window, receiver window should show a moving square)
-
-
-2. Client to client message sending and receiving _via a channel_:
-	- [ChannelReceiver](dist/oocsi/examples/Data/ChannelReceiver/ChannelReceiver.pde) (start this first)
-	- [ChannelSender](dist/oocsi/examples/Data/ChannelSender/ChannelSender.pde) (move mouse over the window, receiver window should show a moving square)
-
-
-3. Getting an updated list of all connected clients
-	- [Tools_ClientLister](dist/oocsi/examples/Tools/ClientLister/Tools/ClientLister.pde)
-	
